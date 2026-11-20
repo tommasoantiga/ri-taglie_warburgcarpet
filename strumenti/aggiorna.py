@@ -7,7 +7,7 @@ che conosce già e cambia il tappeto solo se sul sito ci sono immagini nuove o t
 - quelle nuove ricevono una misura in base a quanto sono larghe nella loro pagina
   (come le altre: tavole a tutta larghezza -> grandi, copertine e immagini piccole -> piccole),
   una versione leggera e, se l'originale è abbastanza grande, una versione ingrandita;
-- quelle tolte dal sito spariscono dal tappeto.
+- quelle tolte dal sito spariscono dal tappeto (anche molte insieme).
 
 Si leggono solo le sottopagine di Small, Medium, Large, Pubblicazioni e la pagina Cadavre exquis;
 si saltano le pagine "in elaborazione", i banner delle intestazioni, i loghi e le immagini a tinta unita.
@@ -44,7 +44,6 @@ PER_PACK, PACK_MAX = 24, 30                   # immagini per pacco leggero (si a
 SOGLIA_FP, SOGLIA_AR = 5.0, 0.04              # riconoscimento: differenza media della miniatura (0-255) e delle proporzioni
 DOPPIONE = 2.0                                # sotto questa differenza e' proprio la stessa immagine (anche due volte nella stessa pagina)
 RITROVA = 12.0                                # una 'nuova' e una 'tolta' della stessa pagina cosi' simili sono la stessa immagine
-MAX_CAMBI = 0.15                              # oltre questa parte del tappeto cambiata in una notte ci si ferma: meglio controllare
 UA = {'User-Agent': 'Mozilla/5.0 (warburgcarpet; aggiornamento notturno)'}
 
 log_righe = []
@@ -387,10 +386,6 @@ def main():
     for i in tolte:
         log('  tolta', i, 'era in', voci[i]['p'])
 
-    if voci and len(tolte) + len(aggiunte) > MAX_CAMBI * len(voci) and not corr.get('forza'):
-        fine(True, True)
-        raise SystemExit('troppe immagini cambiate in una volta: forse il sito non si legge bene, non cambio nulla '
-                         '(se e\' tutto giusto, metti "forza": true in correzioni.json)')
 
     cambia = aggiunte or tolte or spostate or riclassate
     if prova or not cambia:

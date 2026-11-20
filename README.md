@@ -1,6 +1,8 @@
 # Tappeto ri-tagli[e]
 
-Un piano nero infinito di immagini prese dalle pagine di ri-tagli[e] (Small, Medium, Large, Pubblicazioni e Cadavre exquis). Si trascina in tutte le direzioni, si zooma, si tocca un'immagine per ingrandirla; la sigla sotto l'immagine porta alla pagina da cui viene. A ogni visita l'ordine cambia.
+La porta d'ingresso di [ri-tagli[e]](https://sites.google.com/view/ri-taglie): un piano nero infinito di immagini prese dalle sue pagine (Small, Medium, Large, Pubblicazioni e Cadavre exquis). Si trascina in tutte le direzioni, si zooma, si tocca un'immagine per ingrandirla; la sigla sotto l'immagine porta alla pagina da cui viene, e il pulsante "entra nel sito" in basso a destra porta alla home. A ogni visita l'ordine cambia.
+
+Indirizzo: https://tommasoantiga.github.io/ri-taglie_warburgcarpet/
 
 ## Com'è fatto
 

@@ -21,8 +21,8 @@ PER_PACK = 24                                           # immagini per pacco leg
 SECTION_PATH = {'Small': '/small/', 'Medium': '/medium/', 'Large': '/large/', 'Pubblicazioni': '/pubblicazioni/', 'Cadavre exquis': '/'}
 
 def slug(t):
-    # default Google Sites path fragment: lower case, only letters, digits and hyphens
-    return re.sub(r'[^a-z0-9-]', '', t.lower().replace(' ', '-'))
+    # percorso predefinito di Google Sites: minuscole, spazi e punti diventano trattini (AdP19.I -> adp19-i)
+    return re.sub(r'[^a-z0-9-]', '', t.lower().replace(' ', '-').replace('.', '-'))
 
 R = lambda a, b: list(range(a, b + 1))
 
@@ -167,7 +167,7 @@ if __name__ == '__main__':
         fh.write('// w/h: misure della versione piu\' grande; s: XS/S/M/L; p: codice pagina;\n')
         fh.write('// u: percorso sul sito pubblicato; q: id pagina (anteprima dell\'editor)\n')
         fh.write("// TAPPETO_SITE: indirizzo del sito pubblicato (es. https://sites.google.com/view/...); vuoto = apre l'anteprima dell'editor\n")
-        fh.write("window.TAPPETO_SITE = '';\n")
+        fh.write("window.TAPPETO_SITE = 'https://sites.google.com/view/ri-taglie';\n")
         fh.write(f"window.TAPPETO_PACKS = {NG};   // img/p00.js ... : versioni leggere in fila (g pacco, o posizione, n byte)\n")
         fh.write(f"window.TAPPETO_PREVIEW = 'https://sites.google.com/d/{SITE_ID}/p/';\n")
         fh.write('window.TAPPETO = [\n')

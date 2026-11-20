@@ -4,13 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#000000">
-<title>Tappeto ri-tagli[e]</title>
+<title>ri-tagli[e] · Warburg Carpet</title>
+<meta name="description" content="ri-tagli[e] di Tommaso Antiga: un tappeto di immagini da sorvolare prima di entrare nel sito.">
 <link rel="preload" href="font/eb-garamond-700.woff2" as="font" type="font/woff2" crossorigin>
 <style>
 /* VOICE occasion, hushed: an archive laid out at night
    IDEA a Mnemosyne panel turned into a flying carpet: pictures pinned at random on an endless black plane
    PICTURE the plane itself, images only, sizes by role (boards large, book covers tiny), packed close but never touching, still
-   COLOUR black ground, the images are the only colour; the page code under an enlarged image white, bold, small, thin white outline
+   COLOUR black ground, the images are the only colour; "entra nel sito" (bottom right) and the page code under an enlarged image: white, bold, small, thin white outline
    TYPE EB Garamond, as on ri-tagli[e], only for the page code under an enlarged image
    LAYOUT a 2D field of square cells (60px on a phone, up to 108px wide screens), 9 x 9 per tile packed with blocks; drag to fly, pinch to zoom, tap to enlarge */
   @font-face { font-family: 'EB Garamond'; font-style: normal; font-weight: 700; font-display: swap; src: url('font/eb-garamond-700.woff2') format('woff2'); }
@@ -41,13 +42,24 @@
     padding: 9px 17px 10px; border: 1px solid rgba(255,255,255,.55); border-radius: 999px;
     background: rgba(0,0,0,.35); opacity: 0; pointer-events: none; transition: opacity .3s ease, border-color .2s ease;
   }
+  #go, #enter { font: 700 15px/1 'EB Garamond', Georgia, serif; color: #fff; text-decoration: none; white-space: nowrap;
+    padding: 9px 17px 10px; border: 1px solid rgba(255,255,255,.55); border-radius: 999px; }
+  #enter {
+    position: fixed; z-index: 5; right: calc(14px + env(safe-area-inset-right)); bottom: calc(14px + env(safe-area-inset-bottom));
+    background: rgba(0,0,0,.55); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    opacity: 0; transition: opacity .6s ease, border-color .2s ease;
+  }
+  #enter.on { opacity: 1; }
+  body.lbopen #enter { opacity: 0; pointer-events: none; }
+  #enter:hover, #enter:focus-visible { border-color: #fff; outline: none; }
   #lb.open #go.on { opacity: 1; pointer-events: auto; }
   #go:hover, #go:focus-visible { border-color: #fff; outline: none; }
 </style>
 </head>
 <body>
 <div id="plane" aria-label="tappeto di immagini"><div id="world"></div></div>
-<div id="lb" aria-hidden="true"><div class="bg"></div><a id="go" target="_blank" rel="noopener"></a></div>
+<div id="lb" aria-hidden="true"><div class="bg"></div><a id="go"></a></div>
+<a id="enter" href="https://sites.google.com/view/ri-taglie">entra nel sito</a>
 
 <!-- elenco delle immagini, generato dalle pagine di ri-tagli[e] -->
 <script src="images.js"></script>
@@ -63,6 +75,9 @@
   const SITE = (window.TAPPETO_SITE || '').replace(/\/$/, '');
   const PREVIEW = window.TAPPETO_PREVIEW || '';
   const pageUrl = it => SITE && it.u ? SITE + it.u : (PREVIEW && it.q ? PREVIEW + it.q + '/preview' : '');
+  const enter = document.getElementById('enter');
+  if (SITE) enter.href = SITE;
+  setTimeout(() => enter.classList.add('on'), 900);
 
   // a ogni visita un ordine nuovo: tutto il tappeto dipende da questo seme
   const SEED = crypto.getRandomValues(new Uint32Array(1))[0];
@@ -408,7 +423,7 @@
     big.style.transition = 'none';
     setT(big, { x: from.left, y: from.top, w: from.width }, it.x.w);
     it.im.style.visibility = 'hidden';
-    lb.classList.add('open'); lb.setAttribute('aria-hidden', 'false');
+    lb.classList.add('open'); lb.setAttribute('aria-hidden', 'false'); document.body.classList.add('lbopen');
     requestAnimationFrame(() => requestAnimationFrame(() => {
       big.style.transition = `transform .55s ${ease}`;
       setT(big, fitRect(it.x.w, it.x.h), it.x.w);
@@ -421,7 +436,7 @@
     const it = cur, r = it.im.getBoundingClientRect();
     big.style.transition = `transform .45s ${ease}, opacity .35s ease`;
     if (it.c.isConnected && onScreen(it)) setT(big, { x: r.left, y: r.top, w: r.width }, it.x.w); else big.style.opacity = '0';
-    lb.classList.remove('open'); lb.setAttribute('aria-hidden', 'true');
+    lb.classList.remove('open'); lb.setAttribute('aria-hidden', 'true'); document.body.classList.remove('lbopen');
     setTimeout(() => { it.im.style.visibility = ''; big.remove(); big = null; busy = false; }, 460);
   }
   function go(dir) {

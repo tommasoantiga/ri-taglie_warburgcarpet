@@ -238,17 +238,24 @@ def _misura(sync_playwright, js, richieste, risultato):
                 log('  misura non riuscita per', percorso, type(e).__name__)
         b.close()
 
-def classe_nuova(rapporto_larghezza, det):
-    r = rapporto_larghezza
+def classe_nuova(rapporto_larghezza, det, misure):
+    r, lato = rapporto_larghezza, max(misure)
     if r is None:
-        return 'M'
-    if r < 0.2:
-        return 'XS'
-    if r < 0.36:
-        return 'S'
-    if r < 0.62:
-        return 'M'
-    return 'L' if det >= 10 else 'M'
+        s = 'M'
+    elif r < 0.2:
+        s = 'XS'
+    elif r < 0.36:
+        s = 'S'
+    elif r < 0.62:
+        s = 'M'
+    else:
+        s = 'L' if det >= 10 else 'M'
+    # un originale piccolo e' quasi sempre una copertina o un'immagine di contorno
+    if lato <= 320:
+        s = 'XS'
+    elif lato <= 520 and s in ('M', 'L'):
+        s = 'S'
+    return s
 
 
 # ---------------------------------------------------------------- aggiornamento
@@ -380,7 +387,8 @@ def main():
     dati_leggeri, dati_grandi = {}, {}
     for i in aggiunte:
         n = nuove[i]
-        s = corr.get('classi', {}).get(i) or classe_nuova(larghezze.get(n['tk']), n['det'])
+        r = larghezze.get(n['tk'])
+        s = corr.get('classi', {}).get(i) or classe_nuova(r, n['det'], n['im'].size)
         (W, H), lo = jpeg(n['im'], THUMB[s], 80)
         v = {'id': i, 's': s, 'p': n['pag']['p'], 'u': n['pag']['u'], 'q': ''}
         if max(n['im'].size) > max(W, H) * HD_GAIN:
@@ -397,7 +405,7 @@ def main():
         voci[i] = v
         gruppi.setdefault(g, []).append(i)
         toccati.add(g)
-        log(f'  {i}: misura {s} ({n["pag"]["p"]}), pacco {g}')
+        log(f'  {i}: misura {s} ({n["pag"]["p"]}, larga {"?" if r is None else f"{r:.2f}"} della colonna), pacco {g}')
     for i in tolte:
         voci.pop(i)
     for g in sorted(toccati):

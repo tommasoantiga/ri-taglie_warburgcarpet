@@ -1,0 +1,16 @@
+controllo del 2026-11-20 13:34 UTC (prova: nessun file del tappeto cambiato)
+
+77 sottopagine nel menu
+immagini sul tappeto 596, riconosciute sul sito 594, nuove 9, tolte 2, cambiate di pagina 1, corrette a mano 0
+pagine in elaborazione saltate: /small/cda, /small/tdlt, /medium/ldpa1, /medium/ldcdes
+  nuova abdbf5090e da EdCdA - 2048x2048, piu' vicina sul tappeto e9e473d767 a 19.1, esclusa piu' vicina a 23.3
+  nuova ad279d6cf6 da AdP19.I - 1740x1152, piu' vicina sul tappeto 19af32121a a 47.8, esclusa piu' vicina a 90.2
+  nuova 4597b29cd1 da TeTdCA - 209x288, piu' vicina sul tappeto 51daa187c4 a 43.7, esclusa piu' vicina a 44.7
+  nuova bdb1292794 da AsR.NEea - 1024x640, piu' vicina sul tappeto 5205a795c4 a 47.4, esclusa piu' vicina a 67.7
+  nuova 03c38e19c0 da AsR.Iis - 165x250, piu' vicina sul tappeto 0c3327259c a 46.7, esclusa piu' vicina a 79.4
+  nuova e190142858 da AsR.AE - 188x269, piu' vicina sul tappeto 519ca2851d a 7.1, esclusa piu' vicina a 29.0
+  nuova b2e2e7cbbe da AsR.AE - 180x273, piu' vicina sul tappeto aa67c80bdc a 39.9, esclusa piu' vicina a 80.3
+  nuova b453fa60cf da Cadavre exquis - 100x181, piu' vicina sul tappeto 437a40bfc9 a 110.6, esclusa piu' vicina a 130.9
+  nuova 60ab4505de da Cadavre exquis - 1808x1197, piu' vicina sul tappeto 19af32121a a 39.5, esclusa piu' vicina a 86.8
+  tolta 6b9820a5ba era in Cadavre exquis
+  tolta b62134b4b7 era in AsR.NEea

@@ -1,140 +1,22 @@
-controllo del 2026-11-20 14:06 UTC
+controllo del 2026-11-20 13:47 UTC
 
 77 sottopagine nel menu
-  risposta 502 https://sites.google.com/sitesv-images-rt/APXyLQdqA0L8-yGs-kclrj6yXXn2qJVhYcHPODFT8MzyK21q
-immagini sul tappeto 601, riconosciute sul sito 556, nuove 43, tolte 45, cambiate di pagina 0, corrette a mano 0
+immagini sul tappeto 596, riconosciute sul sito 594, nuove 7, tolte 2, cambiate di pagina 1, corrette a mano 0
 pagine in elaborazione saltate: /small/cda, /small/tdlt, /medium/ldpa1, /medium/ldcdes
-  nuova 2eddab15a1 da EdCdA - 2048x2048, piu' vicina sul tappeto e9e473d767 a 19.2, esclusa piu' vicina a 23.3
-  nuova 5fc4c84f38 da AdP19.I - 1600x1059, piu' vicina sul tappeto 2e105f618d a 1.5, esclusa piu' vicina a 86.2
-  nuova 9474e90a9d da EAW - 2048x1152, piu' vicina sul tappeto 38256f17fc a 6.3, esclusa piu' vicina a 1000000000.0
-  nuova 0d188c2e5b da EAW - 2048x1152, piu' vicina sul tappeto 18e2344bcb a 8.2, esclusa piu' vicina a 1000000000.0
-  nuova 52568c3eb8 da EAW - 2048x1152, piu' vicina sul tappeto 9fa45aa63a a 6.7, esclusa piu' vicina a 1000000000.0
-  nuova 5ad393eb7d da EAW - 2048x1152, piu' vicina sul tappeto 3b4cf0ac51 a 10.4, esclusa piu' vicina a 1000000000.0
-  nuova 29b9e8216a da EAW - 2048x1152, piu' vicina sul tappeto 208e83e922 a 5.9, esclusa piu' vicina a 1000000000.0
-  nuova 23430ca737 da AdP24.slgp - 1131x1600, piu' vicina sul tappeto a3e293b247 a 15.3, esclusa piu' vicina a 29.0
-  nuova cff44fb73e da Pda.Iit-Tv - 1132x1600, piu' vicina sul tappeto d1f013ad98 a 5.3, esclusa piu' vicina a 66.8
-  nuova c730c82ae8 da LIdPA1 - 2048x1446, piu' vicina sul tappeto a8908cddb0 a 6.5, esclusa piu' vicina a 45.1
-  nuova cf9753385d da LIdPA1 - 1600x1131, piu' vicina sul tappeto 3bfdfc5cf5 a 6.5, esclusa piu' vicina a 38.5
-  nuova 9ae4475568 da AsR.NEea - 1988x1243, piu' vicina sul tappeto a0eebc6c36 a 5.3, esclusa piu' vicina a 74.4
-  nuova e1c94f6edb da EgsR.ED - 1200x1600, piu' vicina sul tappeto 11d25a0afc a 6.1, esclusa piu' vicina a 1000000000.0
-  nuova 6e4a45cca3 da AdC.N[P] - 2048x1453, piu' vicina sul tappeto 446eb5a88d a 6.1, esclusa piu' vicina a 13.6
-  nuova ffdaf9f4b0 da RsR.A-BC - 1133x1600, piu' vicina sul tappeto d69fecfbcf a 6.6, esclusa piu' vicina a 88.1
-  nuova 48ba5c5f86 da RsR.A-BC - 1133x1600, piu' vicina sul tappeto 623e65ffea a 6.8, esclusa piu' vicina a 6.9
-  nuova 109f4f03d8 da CiV.Ipt - 1131x1600, piu' vicina sul tappeto f92cb7d0ed a 5.4, esclusa piu' vicina a 6.7
-  nuova 8a519318a9 da AdC.BQ - 2048x1453, piu' vicina sul tappeto 6b75a5bafb a 6.1, esclusa piu' vicina a 15.2
-  nuova 4d80ef8c08 da AsR.AE - 1131x1600, piu' vicina sul tappeto 1a34a7fef8 a 6.0, esclusa piu' vicina a 10.5
-  nuova d66efac38c da AsR.AE - 1131x1600, piu' vicina sul tappeto 9389b9c2e2 a 7.0, esclusa piu' vicina a 7.5
-  nuova 6f0276e187 da AsR.AE - 1131x1600, piu' vicina sul tappeto 2baa4c6093 a 5.7, esclusa piu' vicina a 12.0
-  nuova 3db5c6593f da AsR.AE - 1131x1600, piu' vicina sul tappeto 63c241993c a 5.5, esclusa piu' vicina a 7.7
-  nuova 7416e5cf47 da AdC.Rs - 1600x1600, piu' vicina sul tappeto 9117eb1d07 a 8.2, esclusa piu' vicina a 54.5
-  nuova 4459afa56f da AdC.Igf - 1131x1600, piu' vicina sul tappeto a2a4a8099a a 4.4, esclusa piu' vicina a 5.8
-  nuova e617362825 da AdC.Igf - 1131x1600, piu' vicina sul tappeto 32146fc072 a 4.9, esclusa piu' vicina a 6.7
-  nuova e34e9bd38a da LIB.Msl - 1108x1600, piu' vicina sul tappeto 220e90b273 a 5.3, esclusa piu' vicina a 70.9
-  nuova 09993ddeb5 da AsR.Sa - 2048x1449, piu' vicina sul tappeto 992b7eb33d a 6.2, esclusa piu' vicina a 33.8
-  nuova cf9d975941 da AsR.Sa - 2048x1451, piu' vicina sul tappeto 3bb0e63e71 a 6.9, esclusa piu' vicina a 27.2
-  nuova e6cd0e212a da AsR.Sa - 2048x1450, piu' vicina sul tappeto 06dde9d6fe a 5.9, esclusa piu' vicina a 29.0
-  nuova 2e9c8ce1ce da AsR.CFI - 1131x1600, piu' vicina sul tappeto 9f43b0de9b a 5.6, esclusa piu' vicina a 9.4
-  nuova 8a9602daea da AsR.CFI - 1131x1600, piu' vicina sul tappeto 95ac32fab1 a 5.7, esclusa piu' vicina a 5.3
-  nuova dcfb615aba da AsR.CFI - 1131x1600, piu' vicina sul tappeto 0d1344cb6b a 5.7, esclusa piu' vicina a 6.7
-  nuova 86bcae6181 da CiV.Bs - 1145x1600, piu' vicina sul tappeto 8e0a47ac41 a 6.5, esclusa piu' vicina a 54.8
-  nuova e8c0437a95 da CiV.Mfs - 1120x1600, piu' vicina sul tappeto ae742f140a a 5.6, esclusa piu' vicina a 6.7
-  nuova 81790322dd da AdC.Iam - 1280x1600, piu' vicina sul tappeto c021ae6db2 a 6.5, esclusa piu' vicina a 1000000000.0
-  nuova b4592f2c56 da AdC.AM - 2048x1453, piu' vicina sul tappeto 6a28c47069 a 9.5, esclusa piu' vicina a 105.4
-  nuova ead84d25eb da AdC.AM - 2048x1453, piu' vicina sul tappeto ca93b780bc a 15.6, esclusa piu' vicina a 35.6
-  nuova 6226a417c8 da AdC.AM - 2048x1453, piu' vicina sul tappeto 06f94345ae a 14.9, esclusa piu' vicina a 31.3
-  nuova 23434c1977 da AdC.AM - 2048x1453, piu' vicina sul tappeto fb22a117e4 a 5.7, esclusa piu' vicina a 12.7
-  nuova 0dd829e826 da AdC.AM - 2048x1453, piu' vicina sul tappeto 8eb7aeda15 a 9.8, esclusa piu' vicina a 27.8
-  nuova ba809860b9 da AsR.Ie - 600x1600, piu' vicina sul tappeto e7f04ae947 a 8.8, esclusa piu' vicina a 1000000000.0
-  nuova a762aadb63 da AsR.Ie - 600x1600, piu' vicina sul tappeto d3e9be813f a 11.7, esclusa piu' vicina a 1000000000.0
-  nuova 7f05d6454c da AsR.Ie - 600x1600, piu' vicina sul tappeto 5bf747c2ee a 11.2, esclusa piu' vicina a 1000000000.0
-  tolta 9f43b0de9b era in AsR.CFI
-  tolta 446eb5a88d era in AdC.N[P]
-  tolta 88c7d3dfcf era in AdC.Igf
-  tolta 623e65ffea era in RsR.A-BC
-  tolta d1f013ad98 era in Pda.Iit-Tv
-  tolta f92cb7d0ed era in CiV.Ipt
-  tolta b1b6c598e0 era in AdC.Igf
-  tolta a8908cddb0 era in LIdPA1
-  tolta 9389b9c2e2 era in AsR.AE
-  tolta ad607098f2 era in AsR.CFI
-  tolta 3bfdfc5cf5 era in LIdPA1
-  tolta 06f94345ae era in AdC.AM
-  tolta 2baa4c6093 era in AsR.AE
-  tolta a782059da0 era in CiV.Mfs
-  tolta a0eebc6c36 era in AsR.NEea
-  tolta d69fecfbcf era in RsR.A-BC
-  tolta 6a28c47069 era in AdC.AM
-  tolta 992b7eb33d era in AsR.Sa
-  tolta 06dde9d6fe era in AsR.Sa
-  tolta 8e0a47ac41 era in CiV.Bs
-  tolta 208e83e922 era in EAW
-  tolta e7f04ae947 era in AsR.Ie
-  tolta 3b4cf0ac51 era in EAW
-  tolta 95ac32fab1 era in CiV.Mfs
-  tolta 9117eb1d07 era in AdC.Rs
-  tolta a3e293b247 era in AdP24.slgp
-  tolta 63c241993c era in AsR.AE
-  tolta ae742f140a era in CiV.Mfs
-  tolta 9fa45aa63a era in EAW
-  tolta ca93b780bc era in AdC.AM
-  tolta d3e9be813f era in AsR.Ie
-  tolta 3bb0e63e71 era in AsR.Sa
-  tolta 11d25a0afc era in EgsR.ED
-  tolta 220e90b273 era in LIB.Msl
-  tolta 84e24d9e2f era in CiV.Mfs
-  tolta fb22a117e4 era in AdC.AM
-  tolta 170ee52d8b era in AsR.CFI
-  tolta 249942bd04 era in AsR.CFI
-  tolta 18e2344bcb era in EAW
-  tolta 8eb7aeda15 era in AdC.AM
-  tolta 5bf747c2ee era in AsR.Ie
-  tolta 1a34a7fef8 era in AsR.AE
-  tolta 38256f17fc era in EAW
-  tolta 6b75a5bafb era in AdC.BQ
-  tolta c021ae6db2 era in AdC.Iam
-  misura non riuscita per /pubblicazioni/civ-ipt TimeoutError
-  misura non riuscita per /pubblicazioni/civ-mfs TimeoutError
-  2eddab15a1: misura M (EdCdA, larga ? della colonna), pacco 18
-  5fc4c84f38: misura M (AdP19.I, larga ? della colonna), pacco 15
-  9474e90a9d: misura M (EAW, larga ? della colonna), pacco 16
-  0d188c2e5b: misura M (EAW, larga ? della colonna), pacco 24
-  52568c3eb8: misura M (EAW, larga ? della colonna), pacco 9
-  5ad393eb7d: misura M (EAW, larga ? della colonna), pacco 18
-  29b9e8216a: misura M (EAW, larga ? della colonna), pacco 15
-  23430ca737: misura M (AdP24.slgp, larga ? della colonna), pacco 17
-  cff44fb73e: misura M (Pda.Iit-Tv, larga ? della colonna), pacco 16
-  c730c82ae8: misura M (LIdPA1, larga ? della colonna), pacco 19
-  cf9753385d: misura M (LIdPA1, larga ? della colonna), pacco 21
-  9ae4475568: misura M (AsR.NEea, larga ? della colonna), pacco 23
-  e1c94f6edb: misura M (EgsR.ED, larga ? della colonna), pacco 24
-  6e4a45cca3: misura M (AdC.N[P], larga ? della colonna), pacco 7
-  ffdaf9f4b0: misura M (RsR.A-BC, larga ? della colonna), pacco 9
-  48ba5c5f86: misura M (RsR.A-BC, larga ? della colonna), pacco 13
-  109f4f03d8: misura M (CiV.Ipt, larga ? della colonna), pacco 18
-  8a519318a9: misura M (AdC.BQ, larga ? della colonna), pacco 20
-  4d80ef8c08: misura M (AsR.AE, larga ? della colonna), pacco 0
-  d66efac38c: misura M (AsR.AE, larga ? della colonna), pacco 1
-  6f0276e187: misura M (AsR.AE, larga ? della colonna), pacco 4
-  3db5c6593f: misura M (AsR.AE, larga ? della colonna), pacco 5
-  7416e5cf47: misura M (AdC.Rs, larga ? della colonna), pacco 11
-  4459afa56f: misura M (AdC.Igf, larga ? della colonna), pacco 12
-  e617362825: misura M (AdC.Igf, larga ? della colonna), pacco 3
-  e34e9bd38a: misura M (LIB.Msl, larga ? della colonna), pacco 6
-  09993ddeb5: misura M (AsR.Sa, larga ? della colonna), pacco 8
-  cf9d975941: misura M (AsR.Sa, larga ? della colonna), pacco 14
-  e6cd0e212a: misura M (AsR.Sa, larga ? della colonna), pacco 15
-  2e9c8ce1ce: misura M (AsR.CFI, larga ? della colonna), pacco 2
-  8a9602daea: misura M (AsR.CFI, larga ? della colonna), pacco 10
-  dcfb615aba: misura M (AsR.CFI, larga ? della colonna), pacco 17
-  86bcae6181: misura M (CiV.Bs, larga ? della colonna), pacco 22
-  e8c0437a95: misura M (CiV.Mfs, larga ? della colonna), pacco 16
-  81790322dd: misura M (AdC.Iam, larga ? della colonna), pacco 19
-  b4592f2c56: misura M (AdC.AM, larga ? della colonna), pacco 21
-  ead84d25eb: misura M (AdC.AM, larga ? della colonna), pacco 23
-  6226a417c8: misura M (AdC.AM, larga ? della colonna), pacco 24
-  23434c1977: misura M (AdC.AM, larga ? della colonna), pacco 7
-  0dd829e826: misura M (AdC.AM, larga ? della colonna), pacco 9
-  ba809860b9: misura M (AsR.Ie, larga ? della colonna), pacco 13
-  a762aadb63: misura M (AsR.Ie, larga ? della colonna), pacco 18
-  7f05d6454c: misura M (AsR.Ie, larga ? della colonna), pacco 20
-tappeto aggiornato: 599 immagini, 25 pacchi leggeri
+  nuova ad279d6cf6 da AdP19.I - 1740x1152, piu' vicina sul tappeto 19af32121a a 47.8, esclusa piu' vicina a 90.2
+  nuova 4597b29cd1 da TeTdCA - 209x288, piu' vicina sul tappeto 51daa187c4 a 43.7, esclusa piu' vicina a 44.7
+  nuova bdb1292794 da AsR.NEea - 1024x640, piu' vicina sul tappeto 5205a795c4 a 47.4, esclusa piu' vicina a 67.7
+  nuova 03c38e19c0 da AsR.Iis - 165x250, piu' vicina sul tappeto 0c3327259c a 46.7, esclusa piu' vicina a 79.4
+  nuova e190142858 da AsR.AE - 188x269, piu' vicina sul tappeto 519ca2851d a 7.1, esclusa piu' vicina a 29.0
+  nuova b2e2e7cbbe da AsR.AE - 180x273, piu' vicina sul tappeto aa67c80bdc a 39.9, esclusa piu' vicina a 80.3
+  nuova 60ab4505de da Cadavre exquis - 1808x1197, piu' vicina sul tappeto 19af32121a a 39.5, esclusa piu' vicina a 86.8
+  tolta 6b9820a5ba era in Cadavre exquis
+  tolta b62134b4b7 era in AsR.NEea
+  ad279d6cf6: misura M (AdP19.I), pacco 24
+  4597b29cd1: misura M (TeTdCA), pacco 15
+  bdb1292794: misura M (AsR.NEea), pacco 13
+  03c38e19c0: misura M (AsR.Iis), pacco 19
+  e190142858: misura M (AsR.AE), pacco 20
+  b2e2e7cbbe: misura M (AsR.AE), pacco 21
+  60ab4505de: misura M (Cadavre exquis), pacco 22
+tappeto aggiornato: 601 immagini, 25 pacchi leggeri

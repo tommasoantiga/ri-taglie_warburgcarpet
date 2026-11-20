@@ -14,6 +14,8 @@
 <meta name="twitter:title" content="ri-tagli[e]">
 <meta name="twitter:description" content="small / medium / large">
 <link rel="preload" href="font/eb-garamond-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="font/eb-garamond-800.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="font/eb-garamond-400.woff2" as="font" type="font/woff2" crossorigin>
 <style>
 /* VOICE occasion, hushed: an archive laid out at night
    IDEA a Mnemosyne panel turned into a flying carpet: pictures pinned at random on an endless black plane
@@ -22,6 +24,8 @@
    TYPE EB Garamond, as on ri-tagli[e], only for the page code under an enlarged image
    LAYOUT a 2D field of square cells (60px on a phone, up to 108px wide screens), 9 x 9 per tile packed with blocks; drag to fly, pinch to zoom, tap to enlarge; inside the enlarged image pinch, double tap or wheel to zoom further */
   @font-face { font-family: 'EB Garamond'; font-style: normal; font-weight: 700; font-display: swap; src: url('font/eb-garamond-700.woff2') format('woff2'); }
+  @font-face { font-family: 'EB Garamond'; font-style: normal; font-weight: 800; font-display: swap; src: url('font/eb-garamond-800.woff2') format('woff2'); }
+  @font-face { font-family: 'EB Garamond'; font-style: normal; font-weight: 400; font-display: swap; src: url('font/eb-garamond-400.woff2') format('woff2'); }
   html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
   body { -webkit-tap-highlight-color: transparent; overscroll-behavior: none; }
   #plane { position: fixed; inset: 0; overflow: hidden; touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none; }
@@ -60,6 +64,16 @@
   #enter.on { opacity: 1; }
   body.lbopen #enter { opacity: 0; pointer-events: none; }
   #enter:hover, #enter:focus-visible { border-color: #fff; outline: none; }
+  /* in basso a sinistra, come un timbro: il nome e, sotto, piu' piccolo, warburg carpet */
+  #stamp {
+    position: fixed; z-index: 5; left: calc(16px + env(safe-area-inset-left)); bottom: calc(15px + env(safe-area-inset-bottom));
+    color: #fff; font-family: 'EB Garamond', Georgia, serif; line-height: 1; pointer-events: none; user-select: none;
+    text-shadow: 0 0 3px rgba(0,0,0,.95), 0 0 10px rgba(0,0,0,.75), 0 0 18px rgba(0,0,0,.5); opacity: 0; transition: opacity .6s ease;
+  }
+  #stamp.on { opacity: 1; }
+  body.lbopen #stamp { opacity: 0; }
+  #stamp b { display: block; font-weight: 800; font-size: 19px; letter-spacing: .01em; }
+  #stamp span { display: block; font-weight: 400; font-size: 13px; margin-top: 3px; letter-spacing: .02em; }
   /* quattro frecce a meta' dei bordi: dicono che il piano si muove, spariscono al primo tocco */
   #hint { position: fixed; inset: 0; z-index: 4; pointer-events: none; transition: opacity .6s ease; }
   #hint.off { opacity: 0; }
@@ -86,6 +100,7 @@
 <div id="hint" aria-hidden="true"><span class="ar up"></span><span class="ar down"></span><span class="ar left"></span><span class="ar right"></span></div>
 <div id="lb" aria-hidden="true"><div class="bg"></div><a id="go"></a></div>
 <a id="enter" href="https://sites.google.com/view/ri-taglie">entra nel sito</a>
+<div id="stamp" aria-hidden="true"><b>ri-tagli[e]</b><span>warburg carpet</span></div>
 
 <!-- elenco delle immagini, generato dalle pagine di ri-tagli[e] -->
 <script src="images.js"></script>
@@ -103,7 +118,7 @@
   const pageUrl = it => SITE && it.u ? SITE + it.u : (PREVIEW && it.q ? PREVIEW + it.q + '/preview' : '');
   const enter = document.getElementById('enter');
   if (SITE) enter.href = SITE;
-  setTimeout(() => enter.classList.add('on'), 900);
+  setTimeout(() => { enter.classList.add('on'); document.getElementById('stamp').classList.add('on'); }, 900);
 
   // a ogni visita un ordine nuovo: tutto il tappeto dipende da questo seme
   const SEED = crypto.getRandomValues(new Uint32Array(1))[0];

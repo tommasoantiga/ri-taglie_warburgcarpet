@@ -1,0 +1,55 @@
+name: Aggiorna il Warburg Carpet
+
+on:
+  schedule:
+    - cron: '17 2 * * *'      # ogni notte alle 2:17 UTC (3:17 in Italia d'inverno, 4:17 d'estate)
+  workflow_dispatch:           # oppure a mano: Actions -> Aggiorna il Warburg Carpet -> Run workflow
+  push:
+    branches: [prova-aggiornamento]   # ramo di prova: controlla e scrive solo il rapporto
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: aggiorna-tappeto
+  cancel-in-progress: false
+
+jobs:
+  aggiorna:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Strumenti
+        run: pip install pillow numpy requests
+
+      - name: Legge ri-tagli[e] e aggiorna il tappeto se servono modifiche
+        run: python strumenti/aggiorna.py ${{ github.ref_name == 'prova-aggiornamento' && '--prova' || '' }}
+
+      - name: Salva le modifiche
+        id: salva
+        run: |
+          git config user.name "aggiornamento notturno"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Nessuna modifica da salvare"
+            echo "salvato=no" >> "$GITHUB_OUTPUT"
+          else
+            git commit -m "Aggiornamento automatico del tappeto da ri-tagli[e]"
+            git push
+            echo "salvato=si" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Ripubblica la pagina
+        if: steps.salva.outputs.salvato == 'si' && github.ref_name == 'main'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X POST "repos/${{ github.repository }}/pages/builds"

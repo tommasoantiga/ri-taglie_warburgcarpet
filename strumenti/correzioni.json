@@ -1,0 +1,5 @@
+{
+  "nota": "Correzioni a mano per l'aggiornamento automatico. classi: misura sul tappeto (XS, S, M, L) per l'id di un'immagine; esclusi: id da non mettere mai sul tappeto. L'id di ogni immagine e' nel campo \"id\" di images.js.",
+  "classi": {},
+  "esclusi": []
+}

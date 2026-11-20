@@ -298,7 +298,10 @@ def main():
             if len(dn) and dn.min() <= SOGLIA_FP:
                 tokmap[tk] = chiavi[int(dn.argmin())]; continue
             i = hashlib.sha1(bytes.fromhex(f['fp'])).hexdigest()[:10]
-            nuove[i] = {'fp': f['fp'], 'ar': f['ar'], 'im': im, 'det': det, 'pag': dict(pag), 'tk': tk}
+            ck, dk = distanze(f['fp'], f['ar'], noti)
+            vicina = f'{ck[int(dk.argmin())]} a {dk.min():.1f}' if len(dk) and dk.min() < 1e8 else 'nessuna con le stesse proporzioni'
+            nuove[i] = {'fp': f['fp'], 'ar': f['ar'], 'im': im, 'det': det, 'pag': dict(pag), 'tk': tk,
+                        'nota': f'{im.size[0]}x{im.size[1]}, piu\' vicina sul tappeto {vicina}, esclusa piu\' vicina a {de.min() if len(de) else 0:.1f}'}
             tokmap[tk] = i
         for tk in token:
             i = tokmap.get(tk)
@@ -318,7 +321,11 @@ def main():
     if saltate:
         log('pagine in elaborazione saltate:', ', '.join(saltate))
     for i in aggiunte:
-        log('  nuova', i, 'da', nuove[i]['pag']['p'])
+        log('  nuova', i, 'da', nuove[i]['pag']['p'], '-', nuove[i]['nota'])
+        if prova:                                    # miniature per controllare a occhio
+            os.makedirs(os.path.join(QUI, 'prova'), exist_ok=True)
+            m = nuove[i]['im'].convert('RGB'); m.thumbnail((360, 360))
+            m.save(os.path.join(QUI, 'prova', i + '.jpg'), 'JPEG', quality=80)
     for i in tolte:
         log('  tolta', i, 'era in', voci[i]['p'])
 
@@ -329,7 +336,8 @@ def main():
     if prova or not cambia:
         if not cambia:
             log('nessuna modifica alle immagini del sito: il tappeto resta com\'è')
-        json.dump(cat, open(CATALOGO, 'w', encoding='utf-8'), separators=(',', ':'))
+        if not prova:                                # in prova il catalogo non si tocca
+            json.dump(cat, open(CATALOGO, 'w', encoding='utf-8'), separators=(',', ':'))
         return fine(prova, cambia)
 
     # 2. misura delle immagini nuove nella loro pagina

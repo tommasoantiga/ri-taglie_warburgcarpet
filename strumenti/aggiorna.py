@@ -53,9 +53,18 @@ def log(*a):
 
 # ---------------------------------------------------------------- impronte
 
+def piatta(im):
+    """Le immagini con parti trasparenti (PNG ritagliati) si appoggiano sul bianco, come sul sito."""
+    if im.mode in ('RGBA', 'LA', 'PA') or (im.mode == 'P' and 'transparency' in im.info):
+        im = im.convert('RGBA')
+        fondo = Image.new('RGB', im.size, (255, 255, 255))
+        fondo.paste(im, mask=im.getchannel('A'))
+        return fondo
+    return im.convert('RGB')
+
 def impronta(im):
     """Miniatura 32x32 in grigio (media dei pixel) e proporzioni: quasi uguale per la stessa immagine a qualsiasi misura."""
-    im = im.convert('L')
+    im = piatta(im).convert('L')
     a = np.asarray(im.resize((32, 32), Image.BOX), dtype=np.uint8)
     return a.tobytes().hex(), im.width / im.height
 
@@ -74,7 +83,7 @@ def distanze(fp, ar, archivio):
     return chiavi, d
 
 def dettaglio(im):
-    a = np.asarray(im.convert('L').resize((64, 64), Image.BOX), dtype=np.float32)
+    a = np.asarray(piatta(im).convert('L').resize((64, 64), Image.BOX), dtype=np.float32)
     return float(a.std())
 
 
@@ -121,7 +130,7 @@ def scrivi_pacco(prefisso, dati):
     return nome
 
 def jpeg(im, lato, q):
-    im = im.convert('RGB')
+    im = piatta(im)
     if max(im.size) > lato:
         im = im.copy(); im.thumbnail((lato, lato), Image.LANCZOS)
     b = io.BytesIO()
@@ -324,7 +333,7 @@ def main():
         log('  nuova', i, 'da', nuove[i]['pag']['p'], '-', nuove[i]['nota'])
         if prova:                                    # miniature per controllare a occhio
             os.makedirs(os.path.join(QUI, 'prova'), exist_ok=True)
-            m = nuove[i]['im'].convert('RGB'); m.thumbnail((360, 360))
+            m = piatta(nuove[i]['im']); m.thumbnail((360, 360))
             m.save(os.path.join(QUI, 'prova', i + '.jpg'), 'JPEG', quality=80)
     for i in tolte:
         log('  tolta', i, 'era in', voci[i]['p'])

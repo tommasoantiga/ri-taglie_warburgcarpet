@@ -280,7 +280,7 @@ def main():
     log(f'{len(pagine)} sottopagine nel menu')
     if len(pagine) < 20:
         raise SystemExit('troppo poche pagine trovate: il sito non si legge bene, non cambio nulla')
-    presenti, nuove, saltate = {}, {}, []
+    presenti, nuove, saltate, pagine_di = {}, {}, [], {}
     arch_esclusi = {str(k): e for k, e in enumerate(esclusi)}
     for pag in pagine:
         token = leggi_pagina(pag)
@@ -337,9 +337,18 @@ def main():
             tokmap[tk] = i
         for tk in token:
             i = tokmap.get(tk)
-            if i and i != 'x' and i not in presenti:
-                presenti[i] = dict(pag)
+            if i and i != 'x':
+                pagine_di.setdefault(i, []).append(dict(pag))
+                if i not in presenti:
+                    presenti[i] = dict(pag)
         info.clear()
+
+    # un'immagine che sta in piu' pagine resta legata a quella di prima, se c'e' ancora
+    for i, pp in pagine_di.items():
+        if i in voci and i in presenti:
+            stessa = next((q for q in pp if q['u'] == voci[i]['u']), None)
+            if stessa:
+                presenti[i] = stessa
 
     # una 'nuova' quasi uguale a una 'tolta' della stessa pagina e' la stessa immagine letta un po' diversa
     mancanti = {i: noti[i] for i in voci if i not in presenti and i in noti}

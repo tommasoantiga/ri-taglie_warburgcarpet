@@ -154,6 +154,7 @@ def scarica(url, tentativi=4):
     raise RuntimeError('non riesco a scaricare ' + url)
 
 TOKEN = r'sitesv-images-rt/([A-Za-z0-9_\-]+)'
+IMMAGINE = 'https://sites.google.com/sitesv-images-rt/'
 
 def pagine_del_sito():
     """Percorsi e codici delle sottopagine, nell'ordine del menu."""
@@ -268,7 +269,8 @@ def main():
     voci = {v['id']: v for v in stato['voci']}
     noti = cat['immagini']                      # id -> {fp, ar}
     esclusi = cat['esclusi']                    # [{fp, ar, nota}]
-    tokmap = cat.setdefault('token', {})        # token -> id oppure "x"
+    tokmap = {}                                 # token -> id oppure "x" (gli indirizzi di Google cambiano a ogni lettura: valgono solo per questa)
+    cat.pop('token', None)
 
     # 1. il sito com'è adesso
     pagine = pagine_del_sito()
@@ -286,12 +288,12 @@ def main():
         for tk in token:
             if tk in tokmap:
                 continue
-            try:
-                im = Image.open(io.BytesIO(scarica('https://sites.google.com/sitesv-images-rt/' + tk))); im.load()
+            try:                                         # per riconoscerla basta una copia piccola
+                im = Image.open(io.BytesIO(scarica(IMMAGINE + tk + '=s400'))); im.load()
             except Exception:
                 tokmap[tk] = 'x'; continue
             fp, ar = impronta(im)
-            info[tk] = {'fp': fp, 'ar': ar, 'im': im}
+            info[tk] = {'fp': fp, 'ar': ar}
         # abbinamento: dalla coppia piu' simile in giu', un'immagine del tappeto per immagine della pagina
         cand = []
         for tk, f in info.items():
@@ -312,7 +314,11 @@ def main():
             _, de = distanze(f['fp'], f['ar'], arch_esclusi)
             if len(de) and de.min() <= SOGLIA_FP:
                 tokmap[tk] = 'x'; continue
-            im = f['im']; det = dettaglio(im)
+            try:                                         # nuova davvero: serve l'originale intero
+                im = Image.open(io.BytesIO(scarica(IMMAGINE + tk))); im.load()
+            except Exception:
+                tokmap[tk] = 'x'; continue
+            det = dettaglio(im)
             if det < 3 or max(im.size) < 160:                   # tinta unita o minuscola
                 esclusi.append({'fp': f['fp'], 'ar': f['ar'], 'nota': f'automatico: {"tinta unita" if det < 3 else "minuscola"} ({pag["p"]})'})
                 arch_esclusi[str(len(esclusi) - 1)] = esclusi[-1]

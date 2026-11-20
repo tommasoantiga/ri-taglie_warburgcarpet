@@ -204,32 +204,39 @@ def misura_larghezze(richieste):
                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     js = """(tokens) => {
       const out = {};
+      const tiles = [...document.querySelectorAll('.jXK9ad-SmKAyb')];
+      const W = Math.max(1, ...tiles.map(t => t.getBoundingClientRect().width));      // larghezza della colonna del testo
       const els = [...document.querySelectorAll('img, [style*="background-image"]')];
       for (const tk of tokens) {
         const e = els.find(e => (e.getAttribute('src') || '').includes(tk) || (e.getAttribute('style') || '').includes(tk));
         if (!e) continue;
-        const sec = e.closest('section') || document.body;
-        let box = e;   // nei caroselli l'immagine e' uno sfondo: si misura il carosello
-        for (let p = e; p && p !== sec; p = p.parentElement) if (p.getBoundingClientRect().width > box.getBoundingClientRect().width) { if (p.getAttribute('jsname') === 'kEMzy' || /Ah1ayc/.test(p.className)) { box = p; break; } }
-        const w = box.getBoundingClientRect().width, W = sec.getBoundingClientRect().width;
-        if (w > 0 && W > 0) out[tk] = Math.min(1.2, w / (W * 0.9));
+        const box = e.closest('[jsname=kEMzy]') || e;          // nei caroselli si misura il carosello
+        const w = box.getBoundingClientRect().width;
+        if (w > 0) out[tk] = Math.min(1.2, w / W);
       }
       return out;
     }"""
     risultato = {}
+    try:
+        _misura(sync_playwright, js, richieste, risultato)
+    except Exception as e:                        # senza browser le nuove prendono la misura media
+        log('  misura delle larghezze non riuscita:', type(e).__name__, str(e)[:120])
+    return risultato
+
+def _misura(sync_playwright, js, richieste, risultato):
     with sync_playwright() as p:
         b = p.chromium.launch()
         pg = b.new_page(viewport={'width': 1280, 'height': 900})
         for percorso, tokens in richieste.items():
             try:
-                pg.goto(SITO + percorso, wait_until='networkidle', timeout=90000)
+                pg.goto(SITO + percorso, wait_until='load', timeout=90000)
                 for _ in range(12):
                     pg.mouse.wheel(0, 1500); pg.wait_for_timeout(250)
+                pg.wait_for_timeout(1500)
                 risultato.update(pg.evaluate(js, tokens))
             except Exception as e:
                 log('  misura non riuscita per', percorso, type(e).__name__)
         b.close()
-    return risultato
 
 def classe_nuova(rapporto_larghezza, det):
     r = rapporto_larghezza

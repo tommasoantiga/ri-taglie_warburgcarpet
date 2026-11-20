@@ -39,4 +39,4 @@ Per correggere a mano, modifica `strumenti/correzioni.json` (l'`id` di ogni imma
 { "classi": { "1a2b3c4d5e": "L" }, "esclusi": ["6f7a8b9c0d"] }
 ```
 
-Le misure possibili sono `XS`, `S`, `M` e `L`. Le correzioni valgono dal controllo successivo.
+Le misure possibili sono `XS`, `S`, `M` e `L`. Appena salvi `correzioni.json` su GitHub parte subito un controllo.

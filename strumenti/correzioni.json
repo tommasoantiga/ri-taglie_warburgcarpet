@@ -1,5 +1,5 @@
 {
-  "nota": "Correzioni a mano per l'aggiornamento automatico. classi: misura sul tappeto (XS, S, M, L) per l'id di un'immagine; esclusi: id da non mettere mai sul tappeto. L'id di ogni immagine e' nel campo \"id\" di images.js.",
+  "nota": "Correzioni a mano per l'aggiornamento automatico. classi: misura sul tappeto (XS, S, M, L) per l'id di un'immagine; esclusi: id da non mettere mai sul tappeto. L'id di ogni immagine e' nel campo \"id\" di images.js. Esclusi qui: le due mani (logo del sito) su EdCdA e Cadavre exquis.",
   "classi": {},
-  "esclusi": []
+  "esclusi": ["abdbf5090e", "b453fa60cf"]
 }

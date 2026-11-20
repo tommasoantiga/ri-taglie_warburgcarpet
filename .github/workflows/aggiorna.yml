@@ -5,7 +5,8 @@ on:
     - cron: '17 2 * * *'      # ogni notte alle 2:17 UTC (3:17 in Italia d'inverno, 4:17 d'estate)
   workflow_dispatch:           # oppure a mano: Actions -> Aggiorna il Warburg Carpet -> Run workflow
   push:
-    branches: [prova-aggiornamento]   # ramo di prova: controlla e scrive solo il rapporto
+    branches: [main, prova-aggiornamento]   # su main solo quando cambiano le correzioni; il ramo di prova scrive solo il rapporto
+    paths: ['strumenti/correzioni.json', 'strumenti/aggiorna.py']
 
 permissions:
   contents: write

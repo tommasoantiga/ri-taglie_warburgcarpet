@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>Tappeto ri-tagli[e]</title>
+<link rel="preload" href="font/eb-garamond-700.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+/* VOICE occasion, hushed: an archive laid out at night
+   IDEA a Mnemosyne panel turned into a flying carpet: pictures pinned at random on an endless black plane
+   PICTURE the plane itself, images only, sizes by role (boards large, book covers tiny), packed close but never touching, still
+   COLOUR black ground, the images are the only colour; the page code under an enlarged image white, bold, small, thin white outline
+   TYPE EB Garamond, as on ri-tagli[e], only for the page code under an enlarged image
+   LAYOUT a 2D field of square cells (60px on a phone, up to 108px wide screens), 9 x 9 per tile packed with blocks; drag to fly, pinch to zoom, tap to enlarge */
+  @font-face { font-family: 'EB Garamond'; font-style: normal; font-weight: 700; font-display: swap; src: url('font/eb-garamond-700.woff2') format('woff2'); }
+  html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
+  body { -webkit-tap-highlight-color: transparent; overscroll-behavior: none; }
+  #plane { position: fixed; inset: 0; overflow: hidden; touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none; }
+  #plane.drag { cursor: grabbing; }
+  #world { position: absolute; left: 0; top: 0; transform-origin: 0 0; will-change: transform; }
+  .sc { position: absolute; }                                   /* un riquadro del tappeto */
+  .c { position: absolute; }
+  .c img {
+    display: block; width: 100%; height: 100%;
+    cursor: zoom-in; background: #080808;
+    opacity: 0; transition: opacity .7s ease;
+    -webkit-user-drag: none; user-select: none; -webkit-touch-callout: none; pointer-events: none;
+  }
+  .c img.ok { opacity: 1; }
+
+  /* ingrandimento */
+  #lb { position: fixed; inset: 0; z-index: 10; pointer-events: none; }
+  #lb .bg { position: absolute; inset: 0; background: #000; opacity: 0; transition: opacity .35s ease; }
+  #lb.open { pointer-events: auto; cursor: zoom-out; touch-action: none; }
+  #lb.open .bg { opacity: .96; }
+  #lb img.big { position: absolute; left: 0; top: 0; transform-origin: 0 0; max-width: none; display: block; will-change: transform, opacity; -webkit-user-drag: none; user-select: none; }
+  #go {
+    position: absolute; left: 50%; top: 0; transform: translateX(-50%);
+    font: 700 15px/1 'EB Garamond', Georgia, serif; color: #fff; text-decoration: none; white-space: nowrap;
+    padding: 9px 17px 10px; border: 1px solid rgba(255,255,255,.55); border-radius: 999px;
+    background: rgba(0,0,0,.35); opacity: 0; pointer-events: none; transition: opacity .3s ease, border-color .2s ease;
+  }
+  #lb.open #go.on { opacity: 1; pointer-events: auto; }
+  #go:hover, #go:focus-visible { border-color: #fff; outline: none; }
+</style>
+</head>
+<body>
+<div id="plane" aria-label="tappeto di immagini"><div id="world"></div></div>
+<div id="lb" aria-hidden="true"><div class="bg"></div><a id="go" target="_blank" rel="noopener"></a></div>
+
+<!-- elenco delle immagini, generato dalle pagine di ri-tagli[e] -->
+<script src="images.js"></script>
+<script>
+(() => {
+  const LIST = (window.TAPPETO || []).filter(x => x && x.n && x.w && x.h);
+  if (!LIST.length) return;
+  const plane = document.getElementById('plane');
+  const world = document.getElementById('world');
+  const lb = document.getElementById('lb');
+  const lbBg = lb.querySelector('.bg');
+  const goBtn = document.getElementById('go');
+  const SITE = (window.TAPPETO_SITE || '').replace(/\/$/, '');
+  const PREVIEW = window.TAPPETO_PREVIEW || '';
+  const pageUrl = it => SITE && it.u ? SITE + it.u : (PREVIEW && it.q ? PREVIEW + it.q + '/preview' : '');
+
+  // a ogni visita un ordine nuovo: tutto il tappeto dipende da questo seme
+  const SEED = crypto.getRandomValues(new Uint32Array(1))[0];
+  const hash = (a, b, c) => { let h = (a * 374761393 + b * 668265263 + c * 2246822519 + SEED) | 0; h = Math.imul(h ^ (h >>> 13), 1274126177); return (h ^ (h >>> 16)) >>> 0; };
+  const rng = s => () => { s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+  const shuffle = (a, r) => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+  // le immagini stanno in pacchi (script che chiamano __tp): pNN versioni leggere, hNNx versioni ingrandite.
+  // Ogni riquadro del tappeto pesca da un solo pacco leggero, così a ogni spostamento si scarica un file solo.
+  // All'arrivo di un pacco ogni sua immagine diventa un indirizzo blob e il pacco stesso si butta.
+  const NG = window.TAPPETO_PACKS || 1;
+  const R0 = rng(SEED);
+  const GROUPS = [...Array(NG)].map(() => ({ L: [], M: [], S: [], XS: [] }));
+  LIST.forEach(x => (GROUPS[x.g || 0][x.s] || GROUPS[x.g || 0].M).push(x));
+  GROUPS.forEach(G0 => Object.keys(G0).forEach(k => shuffle(G0[k], R0)));
+  const GOFF = Math.floor(R0() * NG);
+  const groupOf = (sx, sy) => ((((sx * 3 + sy * 5 + GOFF) % NG) + NG) % NG);   // riquadri vicini: pacchi diversi
+  const pad2 = g => 'p' + String(g).padStart(2, '0');
+  const MEMBERS = new Map();                                    // nome del pacco -> [[immagine, inizio, byte, chiave]]
+  const addM = (name, x, o, n, key) => { if (!MEMBERS.has(name)) MEMBERS.set(name, []); MEMBERS.get(name).push([x, o, n, key]); };
+  LIST.forEach(x => { addM(pad2(x.g || 0), x, x.o, x.n, 'lo'); if (x.H) addM(x.H, x, x.ho, x.hn, 'hi'); });
+  const packs = new Map(), waiting = new Map(), URLS = { lo: new Map(), hi: new Map() };
+  window.__tp = (name, b64) => {
+    name = typeof name === 'number' ? pad2(name) : name;
+    const bin = atob(b64), u8 = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
+    for (const [x, o, n, key] of MEMBERS.get(name) || []) URLS[key].set(x, URL.createObjectURL(new Blob([u8.subarray(o, o + n)], { type: 'image/jpeg' })));
+    const w = waiting.get(name); if (w) { waiting.delete(name); w(); }
+  };
+  function pack(name) {
+    if (!packs.has(name)) packs.set(name, new Promise((ok, ko) => {
+      waiting.set(name, ok);
+      const s = document.createElement('script');
+      s.src = 'img/' + name + '.js';
+      s.onload = () => s.remove();
+      s.onerror = () => { packs.delete(name); waiting.delete(name); s.remove(); ko(new Error('pacco ' + name)); };
+      document.head.appendChild(s);
+    }));
+    return packs.get(name);
+  }
+  const srcOf = x => pack(pad2(x.g || 0)).then(() => URLS.lo.get(x));           // versione leggera
+  const hdOf = x => x.H ? pack(x.H).then(() => URLS.hi.get(x)) : Promise.resolve(null);   // versione ingrandita, se c'è
+  function sharpen(img, x, still) {                             // passa alla versione ingrandita senza lampi
+    hdOf(x).then(u => {
+      if (!u) return;
+      const hi = new Image();
+      hi.onload = () => { if (still()) img.src = u; };
+      hi.src = u;
+    }).catch(() => {});
+  }
+
+  // misura dei blocchi (in celle): quella che segue meglio le proporzioni dell'immagine,
+  // con un paio di alternative più piccole se lo spazio non basta
+  const BLOCKS = { L: [[4, 3], [5, 3], [3, 3], [3, 4], [3, 5], [4, 4], [5, 4], [4, 5], [2, 3], [3, 2]],
+                   M: [[3, 2], [2, 2], [2, 3], [4, 2], [2, 4], [3, 3]],
+                   S: [[2, 1], [1, 1], [1, 2], [2, 2]], XS: [[1, 1]] };
+  const AREA = { L: 12, M: 5.5, S: 2, XS: 1 };
+  const blockMemo = new Map();
+  function blocksOf(x) {
+    if (blockMemo.has(x)) return blockMemo.get(x);
+    const k = BLOCKS[x.s] ? x.s : 'M', ar = x.w / x.h;
+    const score = ([w, h]) => Math.abs(Math.log(w / h / ar)) * 2 + Math.abs(Math.log(w * h / AREA[k]));
+    const s = [...BLOCKS[k]].sort((a, b) => score(a) - score(b));
+    const out = [s[0], ...s.filter(b => b[0] * b[1] < s[0][0] * s[0][1]).slice(0, 2)];
+    blockMemo.set(x, out);
+    return out;
+  }
+
+  let CELL = 60, G = 9, SCW = CELL * G;           // cella e riquadro (G x G celle)
+  function sizes() {
+    CELL = Math.round(Math.max(60, Math.min(108, innerWidth / 13)));
+    SCW = CELL * G;
+  }
+  sizes();
+
+  // riempie un riquadro (sx, sy) in modo deterministico per questa visita:
+  // prima le tavole, poi le medie, poi le piccole, sparse; poi le immagini rimaste del pacco chiudono i buchi
+  function layout(sx, sy) {
+    const r = rng(hash(sx, sy, 7));
+    const GR = GROUPS[groupOf(sx, sy)];
+    const occ = new Uint8Array(G * G);
+    const out = [], used = new Set();
+    const free = (x, y, w, h) => { if (x < 0 || y < 0 || x + w > G || y + h > G) return false; for (let j = y; j < y + h; j++) for (let i = x; i < x + w; i++) if (occ[j * G + i]) return false; return true; };
+    const put = (img, x, y, w, h) => {
+      for (let j = y; j < y + h; j++) for (let i = x; i < x + w; i++) occ[j * G + i] = 1;
+      used.add(img); out.push({ img, x, y, w, h, r1: r(), r2: r(), r3: r(), r4: r() });
+    };
+    const want = { L: 2 + (r() < 0.35 ? 1 : 0), M: 4 + Math.floor(r() * 2), S: 4 + Math.floor(r() * 3), XS: 5 + Math.floor(r() * 3) };
+    for (const k of ['L', 'M', 'S', 'XS']) {
+      const arr = GR[k]; if (!arr.length) continue;
+      const st = Math.floor(r() * arr.length);
+      for (let i = 0; i < Math.min(want[k], arr.length); i++) {
+        const img = arr[(st + i) % arr.length];
+        if (used.has(img)) continue;
+        place: for (const [w, h] of blocksOf(img)) {
+          for (let t = 0; t < 40; t++) {
+            const x = Math.floor(r() * (G - w + 1)), y = Math.floor(r() * (G - h + 1));
+            if (free(x, y, w, h)) { put(img, x, y, w, h); break place; }
+          }
+        }
+      }
+    }
+    const rest = shuffle(['M', 'S', 'XS'].flatMap(k => GR[k].filter(x => !used.has(x))), r);
+    for (const img of rest) {
+      for (const [w, h] of blocksOf(img)) {
+        const spots = [];
+        for (let y = 0; y <= G - h; y++) for (let x = 0; x <= G - w; x++) if (free(x, y, w, h)) spots.push(x, y);
+        if (spots.length) { const p = Math.floor(r() * spots.length / 2) * 2; put(img, spots[p], spots[p + 1], w, h); break; }
+      }
+    }
+    return out;
+  }
+
+  // ogni immagine sta dentro il suo blocco con una cornice nera fissa: non si toccano e non si sovrappongono mai
+  const PAD = 0.07, SHRINK = { XS: 0.12, S: 0.1, M: 0.08, L: 0.05 };
+  const tiles = new Map();          // riquadri montati
+  const live = new Set();           // immagini montate (per l'ingrandimento)
+  function mount(sx, sy) {
+    const key = sx + ',' + sy;
+    if (tiles.has(key)) return;
+    const el = document.createElement('div');
+    el.className = 'sc';
+    el.style.left = (sx * SCW) + 'px'; el.style.top = (sy * SCW) + 'px';
+    el.style.width = SCW + 'px'; el.style.height = SCW + 'px';
+    const items = [];
+    for (const b of layout(sx, sy)) {
+      const x = b.img, bw = b.w * CELL, bh = b.h * CELL, pad = CELL * PAD, q = SHRINK[x.s] ?? 0.08;
+      const aw = (bw - 2 * pad) * (1 - b.r1 * q), ah = (bh - 2 * pad) * (1 - b.r2 * q);
+      const s = Math.min(aw / x.w, ah / x.h);
+      const iw = x.w * s, ih = x.h * s;
+      const left = pad + (bw - 2 * pad - iw) * b.r3, top = pad + (bh - 2 * pad - ih) * b.r4;
+      const c = document.createElement('div'); c.className = 'c';
+      c.style.left = (b.x * CELL + left).toFixed(1) + 'px'; c.style.top = (b.y * CELL + top).toFixed(1) + 'px';
+      c.style.width = iw.toFixed(1) + 'px'; c.style.height = ih.toFixed(1) + 'px';
+      const im = document.createElement('img');
+      im.alt = ''; im.decoding = 'async'; im.draggable = false;
+      im.addEventListener('load', () => im.classList.add('ok'), { once: true });
+      srcOf(x).then(u => { im.src = u; }).catch(() => {});
+      c.appendChild(im); el.appendChild(c);
+      const it = { c, im, x, hi: false };
+      c.__it = it;
+      items.push(it);
+    }
+    world.appendChild(el);
+    tiles.set(key, { el, items, sx, sy });
+  }
+
+  // camera: il punto del piano al centro dello schermo, e lo zoom
+  const ZMIN = 0.6, ZMAX = 2.6;
+  let camX = 0, camY = 0, vx = 0, vy = 0, Z = 1;
+  const clampZ = z => Math.min(ZMAX, Math.max(ZMIN, z));
+  function zoomAt(px, py, z) {                                   // zoom tenendo fermo il punto sotto il dito o il cursore
+    z = clampZ(z);
+    const k = 1 / Z - 1 / z;
+    camX += (px - innerWidth / 2) * k; camY += (py - innerHeight / 2) * k;
+    Z = z;
+  }
+  function update() {
+    world.style.transform = `translate3d(${(innerWidth / 2).toFixed(1)}px,${(innerHeight / 2).toFixed(1)}px,0) scale(${Z.toFixed(4)}) translate3d(${(-camX).toFixed(2)}px,${(-camY).toFixed(2)}px,0)`;
+    // monta i riquadri vicini, smonta i lontani
+    const M = 220 / Z, hw = innerWidth / 2 / Z, hh = innerHeight / 2 / Z;
+    const x0 = Math.floor((camX - hw - M) / SCW), x1 = Math.floor((camX + hw + M) / SCW);
+    const y0 = Math.floor((camY - hh - M) / SCW), y1 = Math.floor((camY + hh + M) / SCW);
+    for (let sy = y0; sy <= y1; sy++) for (let sx = x0; sx <= x1; sx++) mount(sx, sy);
+    for (const [k, t] of tiles) if (t.sx < x0 - 1 || t.sx > x1 + 1 || t.sy < y0 - 1 || t.sy > y1 + 1) { t.el.remove(); tiles.delete(k); }
+    live.clear();
+    for (const t of tiles.values()) for (const it of t.items) live.add(it);
+    settle();
+  }
+
+  // quando lo zoom si ferma: immagini nitide alla nuova scala, e versioni grandi per quelle ingrandite molto
+  let settleT = 0, rasterZ = 1;
+  function settle() {
+    clearTimeout(settleT);
+    settleT = setTimeout(() => {
+      if (Math.abs(Z - rasterZ) > 0.01) {
+        rasterZ = Z; world.style.willChange = 'auto';
+        requestAnimationFrame(() => requestAnimationFrame(() => { world.style.willChange = 'transform'; }));
+      }
+      if (Z < 1.3) return;
+      const dpr = devicePixelRatio || 1;
+      for (const it of live) {
+        if (it.hi || !it.x.H || !it.im.naturalWidth) continue;
+        const r = it.c.getBoundingClientRect();
+        if (r.right < 0 || r.left > innerWidth || r.bottom < 0 || r.top > innerHeight) continue;
+        if (r.width * dpr <= it.im.naturalWidth * 1.2) continue;
+        it.hi = true;
+        sharpen(it.im, it.x, () => it.c.isConnected);
+      }
+    }, 260);
+  }
+
+  let raf = 0;
+  const schedule = () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; update(); }); };
+  function glide() {                                             // inerzia dopo il lancio
+    if (Math.abs(vx) < 0.05 && Math.abs(vy) < 0.05) { vx = vy = 0; return; }
+    camX -= vx / Z; camY -= vy / Z; vx *= 0.95; vy *= 0.95;
+    update();
+    requestAnimationFrame(glide);
+  }
+  let zGoal = 0, zP = [0, 0];                                     // zoom animato (tastiera): va verso zGoal
+  function zoomTo(z, px = innerWidth / 2, py = innerHeight / 2) {
+    const run = !zGoal;
+    zGoal = clampZ(z); zP = [px, py];
+    if (!run) return;
+    const step = () => {
+      if (!zGoal) return;
+      const nz = Math.abs(zGoal - Z) < 0.004 ? zGoal : Z + (zGoal - Z) * 0.22;
+      zoomAt(zP[0], zP[1], nz); update();
+      if (nz === zGoal) zGoal = 0; else requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+
+  // un dito o il mouse: trascina; due dita: zoom; un tocco senza movimento apre l'immagine
+  const pts = new Map();
+  let down = null, pinch = null, lastT = 0, lastX = 0, lastY = 0, moved = 0;
+  const two = () => { const [a, b] = [...pts.values()]; return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2, d: Math.max(1, Math.hypot(a.x - b.x, a.y - b.y)) }; };
+  plane.addEventListener('pointerdown', e => {
+    if (lb.classList.contains('open')) return;
+    try { plane.setPointerCapture(e.pointerId); } catch (_) {}
+    pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    vx = vy = 0;
+    plane.classList.add('drag');
+    zGoal = 0;
+    if (pts.size >= 2) { const m = two(); pinch = { d: m.d, z: Z, x: m.x, y: m.y }; down = null; return; }
+    down = { x: e.clientX, y: e.clientY };
+    lastX = e.clientX; lastY = e.clientY; lastT = performance.now(); moved = 0;
+  });
+  plane.addEventListener('pointermove', e => {
+    if (!pts.has(e.pointerId)) return;
+    pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (pinch && pts.size >= 2) {
+      const m = two();
+      camX -= (m.x - pinch.x) / Z; camY -= (m.y - pinch.y) / Z;
+      pinch.x = m.x; pinch.y = m.y;
+      zoomAt(m.x, m.y, pinch.z * m.d / pinch.d);
+      schedule(); return;
+    }
+    if (!down) return;
+    const dx = e.clientX - lastX, dy = e.clientY - lastY, now = performance.now(), dt = Math.max(1, now - lastT);
+    camX -= dx / Z; camY -= dy / Z;
+    vx = 0.8 * (dx * 16 / dt) + 0.2 * vx; vy = 0.8 * (dy * 16 / dt) + 0.2 * vy;
+    lastX = e.clientX; lastY = e.clientY; lastT = now;
+    moved = Math.max(moved, Math.hypot(e.clientX - down.x, e.clientY - down.y));
+    schedule();
+  });
+  function up(e) {
+    if (!pts.delete(e.pointerId)) return;
+    if (pinch) {                                                 // fine dello zoom: il dito che resta continua a trascinare
+      if (pts.size >= 2) { const m = two(); pinch = { d: m.d, z: Z, x: m.x, y: m.y }; return; }
+      pinch = null; vx = vy = 0;
+      if (pts.size === 1) { const p = [...pts.values()][0]; down = { x: p.x, y: p.y }; lastX = p.x; lastY = p.y; lastT = performance.now(); moved = 99; }
+      else { down = null; plane.classList.remove('drag'); }
+      return;
+    }
+    if (!down) return;
+    plane.classList.remove('drag');
+    if (moved < 6 && e.type === 'pointerup') {
+      vx = vy = 0;
+      const el = document.elementsFromPoint(e.clientX, e.clientY).find(n => n.classList && n.classList.contains('c'));
+      if (el) open(el.__it);
+    } else if (performance.now() - lastT < 80) requestAnimationFrame(glide);
+    else vx = vy = 0;
+    down = null;
+  }
+  plane.addEventListener('pointerup', up);
+  plane.addEventListener('pointercancel', up);
+  plane.addEventListener('wheel', e => {
+    e.preventDefault();
+    vx = vy = 0;
+    zGoal = 0;
+    if (e.ctrlKey) zoomAt(e.clientX, e.clientY, Z * Math.exp(-Math.max(-30, Math.min(30, e.deltaY * (e.deltaMode === 1 ? 5 : 1))) * 0.01));   // pinch del trackpad o ctrl + rotella
+    else {
+      const k = (e.deltaMode === 1 ? 32 : 1) / Z;
+      camX += (e.shiftKey && !e.deltaX ? e.deltaY : e.deltaX) * k;
+      camY += (e.shiftKey && !e.deltaX ? 0 : e.deltaY) * k;
+    }
+    schedule();
+  }, { passive: false });
+  // Safari su Mac: il pinch del trackpad arriva come "gesture"
+  let gz = 1;
+  addEventListener('gesturestart', e => { e.preventDefault(); gz = Z; }, { passive: false });
+  addEventListener('gesturechange', e => {
+    e.preventDefault();
+    if (pts.size >= 2 || lb.classList.contains('open')) return;   // sul telefono lo zoom lo fanno già le due dita
+    zoomAt(e.clientX || innerWidth / 2, e.clientY || innerHeight / 2, gz * e.scale); schedule();
+  }, { passive: false });
+  addEventListener('gestureend', e => e.preventDefault(), { passive: false });
+  addEventListener('keydown', e => {
+    if (lb.classList.contains('open')) return;
+    if (e.key === '+' || e.key === '=') { e.preventDefault(); zoomTo((zGoal || Z) * 1.3); return; }
+    if (e.key === '-' || e.key === '_') { e.preventDefault(); zoomTo((zGoal || Z) / 1.3); return; }
+    if (e.key === '0') { e.preventDefault(); zoomTo(1); return; }
+    const st = 140, map = { ArrowLeft: [-st, 0], ArrowRight: [st, 0], ArrowUp: [0, -st], ArrowDown: [0, st] };
+    if (map[e.key]) { e.preventDefault(); vx = -map[e.key][0] / 8; vy = -map[e.key][1] / 8; requestAnimationFrame(glide); }
+  });
+  addEventListener('resize', () => {
+    const old = SCW; sizes();
+    if (SCW !== old) { for (const t of tiles.values()) t.el.remove(); tiles.clear(); camX *= SCW / old; camY *= SCW / old; }
+    if (big && !busy) { big.style.transition = 'none'; setT(big, fitRect(cur.x.w, cur.x.h), cur.x.w); showGo(cur); }
+    update();
+  });
+  update();
+
+  // ingrandimento: vola dal tappeto al centro; scorri di lato per le vicine, in alto o in basso per chiudere
+  let cur = null, big = null, busy = false, seq = [], pos = -1;
+  const ease = 'cubic-bezier(.2,.75,.15,1)';
+  function fitRect(w, h) {
+    const m = 16, B = 64;                                       // margine e spazio per "vai a"
+    const s = Math.min((innerWidth - 2 * m) / w, (innerHeight - 2 * m - B) / h);
+    const W = w * s, H = h * s;
+    return { x: (innerWidth - W) / 2, y: (innerHeight - H - B) / 2, w: W, h: H };
+  }
+  function setT(el, r, w) { el.style.transform = `translate(${r.x}px,${r.y}px) scale(${r.w / w})`; }
+  function showGo(it) {
+    const url = pageUrl(it.x);
+    if (!url) { goBtn.classList.remove('on'); return; }
+    const r = fitRect(it.x.w, it.x.h);
+    goBtn.href = url; goBtn.textContent = it.x.p || ''; goBtn.setAttribute('aria-label', 'vai a ' + (it.x.p || ''));
+    goBtn.style.top = (r.y + r.h + 16) + 'px';
+    goBtn.classList.add('on');
+  }
+  const hideGo = () => goBtn.classList.remove('on');
+  function makeBig(it) {
+    const el = new Image();
+    el.className = 'big'; el.alt = '';
+    el.src = it.im.currentSrc || it.im.src;                      // subito la versione leggera, poi quella grande
+    sharpen(el, it.x, () => el.isConnected);
+    el.style.width = it.x.w + 'px'; el.style.height = it.x.h + 'px';
+    lb.appendChild(el);
+    return el;
+  }
+  function onScreen(it) { const r = it.c.getBoundingClientRect(); return r.right > 0 && r.left < innerWidth && r.bottom > 0 && r.top < innerHeight; }
+  function open(it) {
+    if (busy || !it) return;
+    busy = true; cur = it;
+    // sequenza per scorrere: le immagini visibili, in ordine di lettura
+    seq = [...live].filter(onScreen).sort((a, b) => { const ra = a.c.getBoundingClientRect(), rb = b.c.getBoundingClientRect(); return (Math.round(ra.top / 80) - Math.round(rb.top / 80)) || (ra.left - rb.left); });
+    pos = seq.indexOf(it);
+    const from = it.im.getBoundingClientRect();
+    big = makeBig(it);
+    big.style.transition = 'none';
+    setT(big, { x: from.left, y: from.top, w: from.width }, it.x.w);
+    it.im.style.visibility = 'hidden';
+    lb.classList.add('open'); lb.setAttribute('aria-hidden', 'false');
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      big.style.transition = `transform .55s ${ease}`;
+      setT(big, fitRect(it.x.w, it.x.h), it.x.w);
+      setTimeout(() => { busy = false; showGo(it); }, 560);
+    }));
+  }
+  function close() {
+    if (busy || !big) return;
+    busy = true; hideGo();
+    const it = cur, r = it.im.getBoundingClientRect();
+    big.style.transition = `transform .45s ${ease}, opacity .35s ease`;
+    if (it.c.isConnected && onScreen(it)) setT(big, { x: r.left, y: r.top, w: r.width }, it.x.w); else big.style.opacity = '0';
+    lb.classList.remove('open'); lb.setAttribute('aria-hidden', 'true');
+    setTimeout(() => { it.im.style.visibility = ''; big.remove(); big = null; busy = false; }, 460);
+  }
+  function go(dir) {
+    if (busy || !big || !seq.length) return;
+    const np = pos + dir;
+    if (np < 0 || np >= seq.length) return;
+    busy = true; hideGo();
+    const old = big, oldIt = cur, oldR = fitRect(oldIt.x.w, oldIt.x.h);
+    old.style.transition = `transform .4s ${ease}, opacity .3s ease`;
+    setT(old, { x: oldR.x - dir * innerWidth * 0.6, y: oldR.y, w: oldR.w }, oldIt.x.w);
+    old.style.opacity = '0';
+    oldIt.im.style.visibility = '';
+    pos = np; cur = seq[pos];
+    const it = cur;
+    it.im.style.visibility = 'hidden';
+    big = makeBig(it);
+    const r = fitRect(it.x.w, it.x.h);
+    big.style.transition = 'none'; big.style.opacity = '0';
+    setT(big, { x: r.x + dir * innerWidth * 0.6, y: r.y, w: r.w }, it.x.w);
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      big.style.transition = `transform .45s ${ease}, opacity .35s ease`;
+      big.style.opacity = '1'; setT(big, r, it.x.w);
+      setTimeout(() => { old.remove(); busy = false; showGo(it); }, 460);
+    }));
+  }
+  let sx = 0, sy = 0, dx = 0, dy = 0, drag = false;
+  lb.addEventListener('pointerdown', e => { if (!big || busy || e.target.closest('#go')) return; hideGo(); drag = true; sx = e.clientX; sy = e.clientY; dx = dy = 0; big.style.transition = 'none'; });
+  lb.addEventListener('pointermove', e => {
+    if (!drag || !big) return;
+    dx = e.clientX - sx; dy = e.clientY - sy;
+    const r = fitRect(cur.x.w, cur.x.h), vert = Math.abs(dy) > Math.abs(dx);
+    const k = vert ? 1 - Math.min(Math.abs(dy) / innerHeight, 0.5) : 1;
+    setT(big, { x: r.x + (vert ? 0 : dx) + r.w * (1 - k) / 2, y: r.y + (vert ? dy : 0) + r.h * (1 - k) / 2, w: r.w * k }, cur.x.w);
+    lbBg.style.opacity = vert ? String(0.96 * (1 - Math.min(Math.abs(dy) / (innerHeight * 0.6), 0.9))) : '';
+  });
+  function endDrag() {
+    if (!drag || !big) return;
+    drag = false; lbBg.style.opacity = '';
+    if (Math.abs(dx) < 8 && Math.abs(dy) < 8) { close(); return; }
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) { go(dx < 0 ? 1 : -1); return; }
+    if (Math.abs(dy) > 80) { close(); return; }
+    big.style.transition = `transform .35s ${ease}`;
+    setT(big, fitRect(cur.x.w, cur.x.h), cur.x.w);
+    setTimeout(() => showGo(cur), 360);
+  }
+  lb.addEventListener('pointerup', endDrag);
+  lb.addEventListener('pointercancel', endDrag);
+  addEventListener('keydown', e => {
+    if (!big) return;
+    if (e.key === 'Escape') close(); else if (e.key === 'ArrowRight') go(1); else if (e.key === 'ArrowLeft') go(-1);
+  });
+})();
+</script>
+</body>
+</html>

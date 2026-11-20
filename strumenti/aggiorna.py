@@ -21,6 +21,7 @@ Uso:  python strumenti/aggiorna.py           aggiorna se serve
       python strumenti/aggiorna.py --prova   controlla e scrive solo il rapporto
 """
 import base64, hashlib, html, io, json, math, os, re, subprocess, sys, time, datetime
+from concurrent.futures import ThreadPoolExecutor
 
 import numpy as np
 from PIL import Image
@@ -41,7 +42,9 @@ THUMB = {'XS': 600, 'S': 760, 'M': 540, 'L': 720}
 HD_MAX, HD_GAIN, HD_PACK = 1600, 1.2, 1_000_000
 PER_PACK, PACK_MAX = 24, 30                   # immagini per pacco leggero (si apre un pacco nuovo oltre PACK_MAX)
 SOGLIA_FP, SOGLIA_AR = 5.0, 0.04              # riconoscimento: differenza media della miniatura (0-255) e delle proporzioni
-DOPPIONE = 1.2                                # sotto questa differenza e' proprio la stessa immagine
+DOPPIONE = 2.0                                # sotto questa differenza e' proprio la stessa immagine (anche due volte nella stessa pagina)
+RITROVA = 12.0                                # una 'nuova' e una 'tolta' della stessa pagina cosi' simili sono la stessa immagine
+MAX_CAMBI = 0.15                              # oltre questa parte del tappeto cambiata in una notte ci si ferma: meglio controllare
 UA = {'User-Agent': 'Mozilla/5.0 (warburgcarpet; aggiornamento notturno)'}
 
 log_righe = []
@@ -285,15 +288,19 @@ def main():
             saltate.append(pag['u']); continue
         # le immagini mai viste: scaricate e confrontate con quelle del tappeto
         info = {}
-        for tk in token:
-            if tk in tokmap:
-                continue
-            try:                                         # per riconoscerla basta una copia piccola
-                im = Image.open(io.BytesIO(scarica(IMMAGINE + tk + '=s400'))); im.load()
+        da_leggere = [tk for tk in token if tk not in tokmap]
+        def apri(tk):
+            try:
+                im = Image.open(io.BytesIO(scarica(IMMAGINE + tk))); im.load()
+                return tk, im
             except Exception:
-                tokmap[tk] = 'x'; continue
-            fp, ar = impronta(im)
-            info[tk] = {'fp': fp, 'ar': ar}
+                return tk, None
+        with ThreadPoolExecutor(max_workers=6) as ex:
+            for tk, im in ex.map(apri, da_leggere):
+                if im is None:
+                    tokmap[tk] = 'x'; continue
+                fp, ar = impronta(im)
+                info[tk] = {'fp': fp, 'ar': ar, 'im': im}
         # abbinamento: dalla coppia piu' simile in giu', un'immagine del tappeto per immagine della pagina
         cand = []
         for tk, f in info.items():
@@ -314,11 +321,7 @@ def main():
             _, de = distanze(f['fp'], f['ar'], arch_esclusi)
             if len(de) and de.min() <= SOGLIA_FP:
                 tokmap[tk] = 'x'; continue
-            try:                                         # nuova davvero: serve l'originale intero
-                im = Image.open(io.BytesIO(scarica(IMMAGINE + tk))); im.load()
-            except Exception:
-                tokmap[tk] = 'x'; continue
-            det = dettaglio(im)
+            im = f['im']; det = dettaglio(im)
             if det < 3 or max(im.size) < 160:                   # tinta unita o minuscola
                 esclusi.append({'fp': f['fp'], 'ar': f['ar'], 'nota': f'automatico: {"tinta unita" if det < 3 else "minuscola"} ({pag["p"]})'})
                 arch_esclusi[str(len(esclusi) - 1)] = esclusi[-1]
@@ -337,6 +340,23 @@ def main():
             if i and i != 'x' and i not in presenti:
                 presenti[i] = dict(pag)
         info.clear()
+
+    # una 'nuova' quasi uguale a una 'tolta' della stessa pagina e' la stessa immagine letta un po' diversa
+    mancanti = {i: noti[i] for i in voci if i not in presenti and i in noti}
+    coppie = []
+    for n, f in nuove.items():
+        chiavi, d = distanze(f['fp'], f['ar'], mancanti)
+        for j in np.nonzero(d <= RITROVA)[0]:
+            t = chiavi[j]
+            if voci[t]['u'] == f['pag']['u']:
+                coppie.append((float(d[j]), n, t))
+    coppie.sort()
+    for d, n, t in coppie:
+        if n not in nuove or t in presenti:
+            continue
+        log(f'  ritrovata {t} in {voci[t]["p"]} (differenza {d:.1f})')
+        presenti[t] = presenti.pop(n, nuove[n]['pag'])
+        nuove.pop(n)
 
     for i in corr.get('esclusi', []):
         presenti.pop(i, None); nuove.pop(i, None)
@@ -358,8 +378,10 @@ def main():
     for i in tolte:
         log('  tolta', i, 'era in', voci[i]['p'])
 
-    if voci and len(tolte) > 0.3 * len(voci):
-        raise SystemExit('troppe immagini sparite in una volta: forse il sito non si legge bene, non cambio nulla')
+    if voci and len(tolte) + len(aggiunte) > MAX_CAMBI * len(voci) and not corr.get('forza'):
+        fine(True, True)
+        raise SystemExit('troppe immagini cambiate in una volta: forse il sito non si legge bene, non cambio nulla '
+                         '(se e\' tutto giusto, metti "forza": true in correzioni.json)')
 
     cambia = aggiunte or tolte or spostate or riclassate
     if prova or not cambia:

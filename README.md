@@ -1,4 +1,4 @@
-# ri-tagli[e] Warburg Carpet
+# ri-tagli[e]
 
 La porta d'ingresso di [ri-tagli[e]](https://sites.google.com/view/ri-taglie): un piano nero infinito di immagini prese dalle sue pagine (Small, Medium, Large, Pubblicazioni e Cadavre exquis). Si trascina in tutte le direzioni, si zooma, si tocca un'immagine per ingrandirla; la sigla sotto l'immagine porta alla pagina da cui viene, e il pulsante "entra nel sito" in basso a destra porta alla home. A ogni visita l'ordine cambia.
 

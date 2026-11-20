@@ -60,12 +60,30 @@
   #enter.on { opacity: 1; }
   body.lbopen #enter { opacity: 0; pointer-events: none; }
   #enter:hover, #enter:focus-visible { border-color: #fff; outline: none; }
+  /* quattro frecce a meta' dei bordi: dicono che il piano si muove, spariscono al primo tocco */
+  #hint { position: fixed; inset: 0; z-index: 4; pointer-events: none; transition: opacity .6s ease; }
+  #hint.off { opacity: 0; }
+  #hint .ar { position: absolute; width: 34px; height: 34px; animation: hint 1.9s ease-in-out infinite; filter: drop-shadow(0 0 2px rgba(0,0,0,.9)) drop-shadow(0 0 6px rgba(0,0,0,.6)); }
+  #hint .ar::before {
+    content: ''; position: absolute; left: 50%; top: 50%; width: 17px; height: 17px; margin: -8.5px 0 0 -8.5px;
+    border-top: 2.5px solid #fff; border-left: 2.5px solid #fff; transform: rotate(var(--rot)) translate(3px, 3px);
+  }
+  #hint .up    { --rot: 45deg;  --dx: 0;    --dy: -6px; left: 50%; margin-left: -17px; top: calc(10px + env(safe-area-inset-top)); }
+  #hint .down  { --rot: 225deg; --dx: 0;    --dy: 6px;  left: 50%; margin-left: -17px; bottom: calc(10px + env(safe-area-inset-bottom)); }
+  #hint .left  { --rot: -45deg; --dx: -6px; --dy: 0;    top: 50%; margin-top: -17px; left: calc(8px + env(safe-area-inset-left)); }
+  #hint .right { --rot: 135deg; --dx: 6px;  --dy: 0;    top: 50%; margin-top: -17px; right: calc(8px + env(safe-area-inset-right)); }
+  @keyframes hint {
+    0%, 100% { opacity: .35; transform: translate(0, 0); }
+    50%      { opacity: 1; transform: translate(var(--dx), var(--dy)); }
+  }
+  @media (prefers-reduced-motion: reduce) { #hint .ar { animation: none; opacity: .6; } }
   #lb.open #go.on { opacity: 1; pointer-events: auto; }
   #go:hover, #go:focus-visible { border-color: #fff; outline: none; }
 </style>
 </head>
 <body>
 <div id="plane" aria-label="tappeto di immagini"><div id="world"></div></div>
+<div id="hint" aria-hidden="true"><span class="ar up"></span><span class="ar down"></span><span class="ar left"></span><span class="ar right"></span></div>
 <div id="lb" aria-hidden="true"><div class="bg"></div><a id="go"></a></div>
 <a id="enter" href="https://sites.google.com/view/ri-taglie">entra nel sito</a>
 
@@ -305,7 +323,16 @@
   const pts = new Map();
   let down = null, pinch = null, lastT = 0, lastX = 0, lastY = 0, moved = 0;
   const two = () => { const [a, b] = [...pts.values()]; return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2, d: Math.max(1, Math.hypot(a.x - b.x, a.y - b.y)) }; };
+  const hint = document.getElementById('hint');
+  let hinted = true;
+  function hideHint() {
+    if (!hinted) return;
+    hinted = false; hint.classList.add('off');
+    setTimeout(() => hint.remove(), 700);
+  }
+  addEventListener('keydown', hideHint, { once: true });
   plane.addEventListener('pointerdown', e => {
+    hideHint();
     if (lb.classList.contains('open')) return;
     try { plane.setPointerCapture(e.pointerId); } catch (_) {}
     pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
@@ -357,6 +384,7 @@
   plane.addEventListener('pointercancel', up);
   plane.addEventListener('wheel', e => {
     e.preventDefault();
+    hideHint();
     vx = vy = 0;
     zGoal = 0;
     if (e.ctrlKey) zoomAt(e.clientX, e.clientY, Z * Math.exp(-Math.max(-30, Math.min(30, e.deltaY * (e.deltaMode === 1 ? 5 : 1))) * 0.01));   // pinch del trackpad o ctrl + rotella

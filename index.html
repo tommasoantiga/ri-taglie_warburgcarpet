@@ -26,7 +26,7 @@
   @font-face { font-family: 'EB Garamond'; font-style: normal; font-weight: 700; font-display: swap; src: url('font/eb-garamond-700.woff2') format('woff2'); }
   @font-face { font-family: 'EB Garamond'; font-style: normal; font-weight: 800; font-display: swap; src: url('font/eb-garamond-800.woff2') format('woff2'); }
   @font-face { font-family: 'EB Garamond'; font-style: normal; font-weight: 400; font-display: swap; src: url('font/eb-garamond-400.woff2') format('woff2'); }
-  html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
+  html, body { margin: 0; height: 100%; background: #000; overflow: hidden; touch-action: none; }   /* il browser non zooma mai la pagina: lo zoom lo fa il tappeto */
   body { -webkit-tap-highlight-color: transparent; overscroll-behavior: none; }
   #plane { position: fixed; inset: 0; overflow: hidden; touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none; }
   #plane.drag { cursor: grabbing; }
@@ -415,7 +415,7 @@
   addEventListener('gesturestart', e => { e.preventDefault(); gz = lb.classList.contains('open') ? Zs : Z; }, { passive: false });
   addEventListener('gesturechange', e => {
     e.preventDefault();
-    if (pts.size >= 2 || lbPts.size >= 2) return;                // sul telefono lo zoom lo fanno già le due dita
+    if (pts.size || lbPts.size) return;                          // sul telefono lo zoom lo fanno già le dita
     if (lb.classList.contains('open')) { if (big && !busy) zoomIn(gz * e.scale, e.clientX || innerWidth / 2, e.clientY || innerHeight / 2, false); return; }
     zoomAt(e.clientX || innerWidth / 2, e.clientY || innerHeight / 2, gz * e.scale); schedule();
   }, { passive: false });
@@ -431,7 +431,11 @@
   addEventListener('resize', () => {
     const old = SCW; sizes();
     if (SCW !== old) { for (const t of tiles.values()) t.el.remove(); tiles.clear(); camX *= SCW / old; camY *= SCW / old; }
-    if (big && !busy) { resetZoom(); big.style.transition = 'none'; setT(big, fitRect(cur.x.w, cur.x.h), cur.x.w); showGo(cur); }
+    if (big && !busy) {                                          // la barra del browser che compare o sparisce non toglie lo zoom
+      const R = fitRect(cur.x.w, cur.x.h);
+      if (Zr && Zr.w / R.w > 1.01) { Zs = Zr.w / R.w; Zr = clampRect(Zr); showRect(Zr, false); }
+      else { resetZoom(); big.style.transition = 'none'; setT(big, R, cur.x.w); if (!lbPts.size) showGo(cur); }
+    }
     update();
   });
   update();
@@ -439,8 +443,11 @@
   // ingrandimento: vola dal tappeto al centro; scorri di lato per le vicine, in alto o in basso per chiudere
   let cur = null, big = null, busy = false, seq = [], pos = -1;
   const ease = 'cubic-bezier(.2,.75,.15,1)';
+  const GOB = 64;                                               // spazio sotto l'immagine per "vai a"
+  let animTimer = 0, animEnd = null;                            // fine dell'animazione in corso (apertura o cambio immagine)
+  function finishAnim() { const f = animEnd; if (!f) return; animEnd = null; clearTimeout(animTimer); f(); }
   function fitRect(w, h) {
-    const m = 16, B = 64;                                       // margine e spazio per "vai a"
+    const m = 16, B = GOB;                                      // margine e spazio per "vai a"
     const s = Math.min((innerWidth - 2 * m) / w, (innerHeight - 2 * m - B) / h);
     const W = w * s, H = h * s;
     return { x: (innerWidth - W) / 2, y: (innerHeight - H - B) / 2, w: W, h: H };
@@ -477,10 +484,15 @@
     setT(big, { x: from.left, y: from.top, w: from.width }, it.x.w);
     it.im.style.visibility = 'hidden';
     lb.classList.add('open'); lb.setAttribute('aria-hidden', 'false'); document.body.classList.add('lbopen');
+    // se un dito tocca mentre l'immagine sta ancora arrivando, finishAnim la ferma subito al suo posto e lo zoom parte
+    const el = big;
+    const done = () => { el.style.transition = 'none'; setT(el, fitRect(it.x.w, it.x.h), it.x.w); busy = false; goLater(0); };
+    animEnd = done;
     requestAnimationFrame(() => requestAnimationFrame(() => {
-      big.style.transition = `transform .55s ${ease}`;
-      setT(big, fitRect(it.x.w, it.x.h), it.x.w);
-      setTimeout(() => { busy = false; showGo(it); }, 560);
+      if (animEnd !== done) return;
+      el.style.transition = `transform .55s ${ease}`;
+      setT(el, fitRect(it.x.w, it.x.h), it.x.w);
+      animTimer = setTimeout(finishAnim, 560);
     }));
   }
   function close() {
@@ -506,13 +518,16 @@
     const it = cur;
     it.im.style.visibility = 'hidden';
     big = makeBig(it);
-    const r = fitRect(it.x.w, it.x.h);
-    big.style.transition = 'none'; big.style.opacity = '0';
-    setT(big, { x: r.x + dir * innerWidth * 0.6, y: r.y, w: r.w }, it.x.w);
+    const r = fitRect(it.x.w, it.x.h), el = big;
+    el.style.transition = 'none'; el.style.opacity = '0';
+    setT(el, { x: r.x + dir * innerWidth * 0.6, y: r.y, w: r.w }, it.x.w);
+    const done = () => { old.remove(); el.style.transition = 'none'; el.style.opacity = '1'; setT(el, fitRect(it.x.w, it.x.h), it.x.w); busy = false; goLater(0); };
+    animEnd = done;
     requestAnimationFrame(() => requestAnimationFrame(() => {
-      big.style.transition = `transform .45s ${ease}, opacity .35s ease`;
-      big.style.opacity = '1'; setT(big, r, it.x.w);
-      setTimeout(() => { old.remove(); busy = false; showGo(it); }, 460);
+      if (animEnd !== done) return;
+      el.style.transition = `transform .45s ${ease}, opacity .35s ease`;
+      el.style.opacity = '1'; setT(el, r, it.x.w);
+      animTimer = setTimeout(finishAnim, 460);
     }));
   }
   // dentro l'immagine ingrandita: due dita, doppio tocco, rotella o + / - per zoomare; con lo zoom un dito sposta
@@ -522,7 +537,8 @@
   function clampRect(r) {
     const W = innerWidth, H = innerHeight;
     r.x = r.w <= W ? (W - r.w) / 2 : Math.min(0, Math.max(W - r.w, r.x));
-    r.y = r.h <= H ? (H - r.h) / 2 : Math.min(0, Math.max(H - r.h, r.y));
+    // finché sta tutta nello schermo resta dov'era (sopra lo spazio di "vai a"), poi scivola verso il centro: niente salti all'inizio dello zoom
+    r.y = r.h <= H ? (H - r.h) / 2 - GOB / 2 * Math.min(1, (H - r.h) / GOB) : Math.min(0, Math.max(H - r.h, r.y));
     return r;
   }
   function showRect(r, anim) { big.style.transition = anim ? `transform .3s ${ease}` : 'none'; setT(big, r, cur.x.w); }
@@ -533,7 +549,7 @@
     if (z <= 1.01) {
       const was = Zs > 1;
       Zs = 1; Zr = null; showRect(R, anim); lb.classList.remove('zoomed');
-      if (was) setTimeout(() => { if (Zs === 1 && big && !busy) showGo(cur); }, anim ? 320 : 0);
+      if (was) goLater(anim ? 320 : 0);
       return;
     }
     const c = Zr || R, k = (R.w * z) / c.w;
@@ -545,16 +561,26 @@
 
   const lbPts = new Map();
   let sx = 0, sy = 0, dx = 0, dy = 0, lx = 0, ly = 0, drag = false, lbPinch = null;
-  let lastTap = 0, tapX = 0, tapY = 0, tapTimer = 0;
+  let pinched = false, goBlock = false;                         // in questo gesto ci sono state due dita
+  let lastTap = 0, tapX = 0, tapY = 0, tapTimer = 0, tapWait = false;
   const two2 = () => { const [a, b] = [...lbPts.values()]; return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2, d: Math.max(1, Math.hypot(a.x - b.x, a.y - b.y)) }; };
+  function goLater(ms) { setTimeout(() => { if (Zs === 1 && big && cur && !busy && !lbPts.size) showGo(cur); }, ms); }
+  goBtn.addEventListener('click', e => { if (goBlock || Zs > 1) e.preventDefault(); });   // il nome della pagina si apre solo con un tocco vero
   lb.addEventListener('pointerdown', e => {
-    if (!big || busy || e.target.closest('#go')) return;
-    try { lb.setPointerCapture(e.pointerId); } catch (_) {}
+    if (!lb.classList.contains('open')) return;
+    if (busy) finishAnim();                                     // tocco durante l'arrivo dell'immagine: si ferma subito e il gesto vale
+    if (!big || busy) return;
+    clearTimeout(tapTimer);                                     // un nuovo tocco annulla la chiusura in attesa
+    if (!lbPts.size) { pinched = false; goBlock = false; }
+    const onGo = !!e.target.closest('#go');
+    if (!onGo) try { lb.setPointerCapture(e.pointerId); } catch (_) {}
     lbPts.set(e.pointerId, { x: e.clientX, y: e.clientY });
     if (lbPts.size >= 2) {                                      // due dita: zoom
       if (drag && Zs === 1) { lbBg.style.opacity = ''; showRect(baseRect(), false); }
-      drag = false; const m = two2(); lbPinch = { d: m.d, z: Zs, x: m.x, y: m.y }; hideGo(); return;
+      drag = false; pinched = true; goBlock = true; tapWait = false;
+      const m = two2(); lbPinch = { d: m.d, z: Zs, x: m.x, y: m.y }; hideGo(); return;
     }
+    if (onGo) { drag = false; return; }                         // un dito sul nome della pagina: lo lascia al link
     hideGo(); drag = true; sx = lx = e.clientX; sy = ly = e.clientY; dx = dy = 0; big.style.transition = 'none';
   });
   lb.addEventListener('pointermove', e => {
@@ -569,6 +595,7 @@
     if (!drag || !big) return;
     dx = e.clientX - sx; dy = e.clientY - sy;
     if (Zs > 1) { panBy(e.clientX - lx, e.clientY - ly); lx = e.clientX; ly = e.clientY; return; }
+    if (pinched) return;                                        // dopo uno zoom tornato intero, il dito rimasto non sposta né chiude
     const r = baseRect(), vert = Math.abs(dy) > Math.abs(dx);
     const k = vert ? 1 - Math.min(Math.abs(dy) / innerHeight, 0.5) : 1;
     setT(big, { x: r.x + (vert ? 0 : dx) + r.w * (1 - k) / 2, y: r.y + (vert ? dy : 0) + r.h * (1 - k) / 2, w: r.w * k }, cur.x.w);
@@ -576,14 +603,14 @@
   });
   function tapAt(x, y) {
     const now = performance.now();
-    if (now - lastTap < 300 && Math.hypot(x - tapX, y - tapY) < 40) {   // doppio tocco: avvicina o torna intera
-      clearTimeout(tapTimer); lastTap = 0;
+    if (tapWait && now - lastTap < 450 && Math.hypot(x - tapX, y - tapY) < 50) {   // doppio tocco: avvicina o torna intera
+      tapWait = false;
       zoomIn(Zs > 1 ? 1 : 2.5, x, y, true);
       return;
     }
-    lastTap = now; tapX = x; tapY = y;
-    clearTimeout(tapTimer);
-    tapTimer = setTimeout(() => { if (Zs === 1) close(); }, 280);   // un tocco solo: chiude (se non c'è zoom)
+    tapWait = true; lastTap = now; tapX = x; tapY = y;
+    // un tocco solo chiude (se non c'è zoom), ma solo se nel frattempo non è cominciato un altro tocco
+    tapTimer = setTimeout(() => { tapWait = false; if (Zs === 1 && !lbPts.size) close(); }, 320);
   }
   function endDrag(e) {
     if (!lbPts.delete(e.pointerId)) return;
@@ -591,18 +618,24 @@
       if (lbPts.size >= 2) { const m = two2(); lbPinch = { d: m.d, z: Zs, x: m.x, y: m.y }; return; }
       lbPinch = null;
       if (Zs < 1.05) zoomIn(1, 0, 0, true);
-      if (lbPts.size === 1) { const p = [...lbPts.values()][0]; drag = true; sx = lx = p.x; sy = ly = p.y; dx = dy = 99; }
-      else drag = false;
+      if (lbPts.size === 1) { const p = [...lbPts.values()][0]; drag = true; sx = lx = p.x; sy = ly = p.y; dx = dy = 0; }
+      else { drag = false; goLater(320); }
       return;
     }
-    if (!drag || !big) return;
+    if (!drag || !big) { if (!lbPts.size && pinched) goLater(320); return; }
     drag = false; lbBg.style.opacity = '';
+    if (pinched) {                                              // fine di un gesto a due dita: niente chiusura, niente cambio d'immagine
+      if (Zs === 1) showRect(baseRect(), true);
+      if (!lbPts.size) goLater(320);
+      return;
+    }
     if (Math.abs(dx) < 8 && Math.abs(dy) < 8 && e.type === 'pointerup') { if (Zs === 1) showRect(baseRect(), false); tapAt(e.clientX, e.clientY); return; }
+    tapWait = false;
     if (Zs > 1) return;                                         // fine dello spostamento dentro lo zoom
     if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) { go(dx < 0 ? 1 : -1); return; }
     if (Math.abs(dy) > 80) { close(); return; }
     showRect(baseRect(), true);
-    setTimeout(() => { if (Zs === 1) showGo(cur); }, 360);
+    goLater(360);
   }
   lb.addEventListener('pointerup', endDrag);
   lb.addEventListener('pointercancel', endDrag);

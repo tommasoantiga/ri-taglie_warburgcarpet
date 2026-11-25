@@ -3,7 +3,7 @@
 // w/h: misure della versione piu' grande; s: XS/S/M/L; p: codice pagina; u: percorso sul sito pubblicato; id: impronta (vedi strumenti/correzioni.json)
 window.TAPPETO_SITE = 'https://sites.google.com/view/ri-taglie';
 window.TAPPETO_PACKS = 25;
-window.TAPPETO_PACKNAMES = ["p00", "p01", "p02", "p03", "p04", "p05", "p06", "p07", "p08", "p09", "p10", "p11", "p12", "p13-6274ccab", "p14", "p15-b266457d", "p16-c54911be", "p17-382bdf81", "p18-6eaf63b6", "p19-0c93bc80", "p20-720a1ca1", "p21-1f47b9ad", "p22-f4fe9899", "p23-a12bf4b5", "p24-7b73454b"];
+window.TAPPETO_PACKNAMES = ["p00", "p01", "p02", "p03", "p04", "p05", "p06", "p07", "p08", "p09", "p10", "p11", "p12", "p13-6274ccab", "p14", "p15-b266457d", "p16-c54911be", "p17-382bdf81", "p18-6eaf63b6", "p19-1e5bfb71", "p20-31237b90", "p21-1f47b9ad", "p22-f4fe9899", "p23-a12bf4b5", "p24-7b73454b"];
 window.TAPPETO_PREVIEW = '';
 window.TAPPETO = [
 {"g":0,"o":0,"n":23015,"w":550,"h":1600,"s":"L","p":"LdPA2","q":"1b09TwEYArS_rNjyBxN-3bxD60NxI0WiV","u":"/medium/ldpa2","H":"h00a","ho":0,"hn":73128,"id":"1dd449fba1"},
@@ -492,12 +492,13 @@ window.TAPPETO = [
 {"g":19,"o":615516,"n":78063,"w":1600,"h":1135,"s":"S","p":"AdC.AM","q":"1LnGVftOorsOOiVC0iBlYV1bcfPm3U-2r","u":"/pubblicazioni/adc-am","id":"fb22a117e4","ho":0,"hn":276373,"H":"h19d-70f7d36b"},
 {"g":19,"o":693579,"n":123433,"w":1132,"h":1600,"s":"S","p":"AsR.CFI","q":"1TMWxUX-EnoaQ9XdkfwQRhuBtOHRruWR3","u":"/pubblicazioni/asr-cfi","id":"170ee52d8b","ho":276373,"hn":400367,"H":"h19d-70f7d36b"},
 {"g":19,"o":817012,"n":64727,"w":1132,"h":1600,"s":"S","p":"LIdPU","q":"1fPz5yxJn61HxW1KzlUQ3FFUhV68SHEch","u":"/large/lidpu","id":"1049f5266d","ho":676740,"hn":194066,"H":"h19d-70f7d36b"},
-{"g":19,"o":881739,"n":99013,"w":1600,"h":1600,"s":"S","p":"CiV.WW","q":"19YNU4BAk4_G28pMyAT7rYrJXhggCrrMe","u":"/pubblicazioni/civ-ww","id":"1c1c487bac","ho":0,"hn":333825,"H":"h19e-0d1bcae8"},
+{"g":19,"o":881739,"n":99013,"w":1600,"h":1600,"s":"S","p":"CiV.WW","q":"19YNU4BAk4_G28pMyAT7rYrJXhggCrrMe","u":"/pubblicazioni/civ-ww","id":"1c1c487bac","ho":0,"hn":333825,"H":"h19e-279ee804"},
 {"g":19,"o":980752,"n":28415,"w":455,"h":486,"s":"XS","p":"EdCdA","q":"1DR1v7zol_SzitYb0w36Zc8FN6Q4pvg8M","u":"/small/edcda","id":"f85b5d9624"},
-{"g":19,"o":1009167,"n":18366,"w":600,"h":913,"s":"XS","p":"AdC.Igf","q":"1cqySiYrkCplQmTpKFJN4xt6IPmry8aj7","u":"/pubblicazioni/adc-igf","id":"330722557f","ho":333825,"hn":33691,"H":"h19e-0d1bcae8"},
-{"g":19,"o":1027533,"n":30109,"w":1092,"h":1600,"s":"XS","p":"AsR.Vnpu","q":"18Do5c-rSXstobWk1gs7Xvn4OPLTS2dMA","u":"/pubblicazioni/asr-vnpu","id":"540132d90c","ho":367516,"hn":214376,"H":"h19e-0d1bcae8"},
+{"g":19,"o":1009167,"n":18366,"w":600,"h":913,"s":"XS","p":"AdC.Igf","q":"1cqySiYrkCplQmTpKFJN4xt6IPmry8aj7","u":"/pubblicazioni/adc-igf","id":"330722557f","ho":333825,"hn":33691,"H":"h19e-279ee804"},
+{"g":19,"o":1027533,"n":30109,"w":1092,"h":1600,"s":"XS","p":"AsR.Vnpu","q":"18Do5c-rSXstobWk1gs7Xvn4OPLTS2dMA","u":"/pubblicazioni/asr-vnpu","id":"540132d90c","ho":367516,"hn":214376,"H":"h19e-279ee804"},
 {"g":19,"o":1057642,"n":21798,"w":420,"h":600,"s":"XS","p":"AsR.Iis","q":"1RNet-sZsm1TMbvh9EtDBZV5HtxeoVWEZ","u":"/pubblicazioni/asr-iis","id":"4ca55683a7"},
 {"id":"03c38e19c0","s":"XS","p":"AsR.Iis","u":"/pubblicazioni/asr-iis","q":"","w":165,"h":250,"g":19,"o":1079440,"n":15414},
+{"id":"36de7dbe58","s":"M","p":"CiV.WW","u":"/pubblicazioni/civ-ww","q":"","w":1600,"h":1600,"g":19,"o":1094854,"n":63887,"ho":581892,"hn":409521,"H":"h19e-279ee804"},
 {"g":20,"o":0,"n":52815,"w":1600,"h":904,"s":"L","p":"LIdAS","q":"1geERvAffCAMJhbx4iofD9T8jxOswLKAg","u":"/medium/lidas","id":"5714efc182","ho":0,"hn":195905,"H":"h20a-4c2304e3"},
 {"g":20,"o":52815,"n":55244,"w":1600,"h":900,"s":"L","p":"EAW","q":"1j3ovBugu_zbtnHUf4Bo5RMk2k1R7tz9d","u":"/small/eaw","id":"22485af014","ho":195905,"hn":226720,"H":"h20a-4c2304e3"},
 {"g":20,"o":108059,"n":53266,"w":1582,"h":1600,"s":"L","p":"LdTdAeD","q":"10OvdRpbBOpZuvKfATMMn2e_CApwFjlxd","u":"/small/ldtdaed","id":"f862da10fe","ho":422625,"hn":191611,"H":"h20a-4c2304e3"},
@@ -516,11 +517,12 @@ window.TAPPETO = [
 {"g":20,"o":665721,"n":119485,"w":1132,"h":1600,"s":"S","p":"AsR.CFI","q":"1TMWxUX-EnoaQ9XdkfwQRhuBtOHRruWR3","u":"/pubblicazioni/asr-cfi","id":"249942bd04","ho":0,"hn":383579,"H":"h20e-8dc0d4fa"},
 {"g":20,"o":785206,"n":124581,"w":1600,"h":1600,"s":"S","p":"CiV.WW","q":"19YNU4BAk4_G28pMyAT7rYrJXhggCrrMe","u":"/pubblicazioni/civ-ww","id":"717ee054f2","ho":383579,"hn":383720,"H":"h20e-8dc0d4fa"},
 {"g":20,"o":909787,"n":39507,"w":1600,"h":1132,"s":"S","p":"TeTdCA","q":"1D7hqWRQ147ebxANj5ZuLEGRNdKokeREK","u":"/small/tetdca","id":"3fd613b7f4","ho":767299,"hn":154558,"H":"h20e-8dc0d4fa"},
-{"g":20,"o":949294,"n":35950,"w":650,"h":1022,"s":"XS","p":"Pda.Dn","q":"1JnBRYA4CAOI8-dEoLXEpyr2_-xrEZuas","u":"/small/pda-dn","id":"a6b8b38651","ho":0,"hn":88397,"H":"h20f-02bae555"},
-{"g":20,"o":985244,"n":22954,"w":1118,"h":1598,"s":"XS","p":"AsR.Ap","q":"1eLQzaVInBx8B8ec1DIOYzgfDPG-e7CDQ","u":"/pubblicazioni/asr-ap","id":"d4ede58509","ho":88397,"hn":94128,"H":"h20f-02bae555"},
-{"g":20,"o":1008198,"n":61510,"w":946,"h":1500,"s":"XS","p":"AsR.CFI","q":"1TMWxUX-EnoaQ9XdkfwQRhuBtOHRruWR3","u":"/pubblicazioni/asr-cfi","id":"087d424284","ho":182525,"hn":232676,"H":"h20f-02bae555"},
-{"g":20,"o":1069708,"n":41710,"w":1000,"h":1333,"s":"XS","p":"CiV.Brpdp","q":"1tJkBhcUZUWEqXtmgQ8lz2Joq6UEP8Yyq","u":"/pubblicazioni/civ-brpdp","id":"41d49f5eb2","ho":415201,"hn":130990,"H":"h20f-02bae555"},
+{"g":20,"o":949294,"n":35950,"w":650,"h":1022,"s":"XS","p":"Pda.Dn","q":"1JnBRYA4CAOI8-dEoLXEpyr2_-xrEZuas","u":"/small/pda-dn","id":"a6b8b38651","ho":0,"hn":88397,"H":"h20f-cba02897"},
+{"g":20,"o":985244,"n":22954,"w":1118,"h":1598,"s":"XS","p":"AsR.Ap","q":"1eLQzaVInBx8B8ec1DIOYzgfDPG-e7CDQ","u":"/pubblicazioni/asr-ap","id":"d4ede58509","ho":88397,"hn":94128,"H":"h20f-cba02897"},
+{"g":20,"o":1008198,"n":61510,"w":946,"h":1500,"s":"XS","p":"AsR.CFI","q":"1TMWxUX-EnoaQ9XdkfwQRhuBtOHRruWR3","u":"/pubblicazioni/asr-cfi","id":"087d424284","ho":182525,"hn":232676,"H":"h20f-cba02897"},
+{"g":20,"o":1069708,"n":41710,"w":1000,"h":1333,"s":"XS","p":"CiV.Brpdp","q":"1tJkBhcUZUWEqXtmgQ8lz2Joq6UEP8Yyq","u":"/pubblicazioni/civ-brpdp","id":"41d49f5eb2","ho":415201,"hn":130990,"H":"h20f-cba02897"},
 {"id":"e190142858","s":"XS","p":"AsR.AE","u":"/pubblicazioni/asr-ae","q":"","w":188,"h":269,"g":20,"o":1111418,"n":5331},
+{"id":"f66519c951","s":"M","p":"CiV.WW","u":"/pubblicazioni/civ-ww","q":"","w":1600,"h":1600,"g":20,"o":1116749,"n":66185,"ho":546191,"hn":427956,"H":"h20f-cba02897"},
 {"g":21,"o":0,"n":52770,"w":1600,"h":1130,"s":"L","p":"LIdPU","q":"1fPz5yxJn61HxW1KzlUQ3FFUhV68SHEch","u":"/large/lidpu","id":"38e881c44b","ho":0,"hn":183536,"H":"h21a-95236b69"},
 {"g":21,"o":52770,"n":49228,"w":1600,"h":1132,"s":"L","p":"LIdPA1","q":"1kEHPfsgNfnHTzGyuA-QfR62qu_C_ngh1","u":"/large/lidpa1","id":"50ca20b75b","ho":183536,"hn":186911,"H":"h21a-95236b69"},
 {"g":21,"o":101998,"n":54291,"w":1600,"h":753,"s":"L","p":"LTdP","q":"1mWP5Kz3yayA-Hko7CYSJtaTqIWGW9J3-","u":"/medium/ltdp","id":"d17ba2adef","ho":370447,"hn":201487,"H":"h21a-95236b69"},

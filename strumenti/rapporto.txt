@@ -1,18 +1,10 @@
-controllo del 2026-11-24 03:00 UTC
+controllo del 2026-11-25 03:04 UTC
 
 77 sottopagine nel menu
-immagini sul tappeto 601, riconosciute sul sito 601, nuove 6, tolte 0, cambiate di pagina 0, corrette a mano 0
+immagini sul tappeto 607, riconosciute sul sito 607, nuove 2, tolte 0, cambiate di pagina 0, corrette a mano 0
 pagine in elaborazione saltate: /small/cda, /small/tdlt, /medium/ldpa1, /medium/ldcdes
-  nuova f85c081a55 da CiV.WW - 1600x1600, piu' vicina sul tappeto 1fb810d8e0 a 4.3, esclusa piu' vicina a 9.6
-  nuova 82cad8bd41 da CiV.WW - 1600x1600, piu' vicina sul tappeto b416c57b61 a 5.1, esclusa piu' vicina a 5.7
-  nuova 0615582dc0 da CiV.WW - 1600x1600, piu' vicina sul tappeto df20f95e67 a 5.7, esclusa piu' vicina a 6.5
-  nuova 54a3683667 da CiV.WW - 1600x1600, piu' vicina sul tappeto 1c1c487bac a 5.8, esclusa piu' vicina a 8.8
-  nuova 3a344e042a da CiV.WW - 1600x1600, piu' vicina sul tappeto b416c57b61 a 4.6, esclusa piu' vicina a 8.0
-  nuova bf3ca41af3 da CiV.WW - 1600x1600, piu' vicina sul tappeto 60564c4c93 a 3.8, esclusa piu' vicina a 5.9
-  f85c081a55: misura M (CiV.WW, larga 0.49 della colonna), pacco 15
-  82cad8bd41: misura M (CiV.WW, larga ? della colonna), pacco 23
-  0615582dc0: misura M (CiV.WW, larga 0.49 della colonna), pacco 24
-  54a3683667: misura M (CiV.WW, larga 0.49 della colonna), pacco 16
-  3a344e042a: misura M (CiV.WW, larga ? della colonna), pacco 17
-  bf3ca41af3: misura M (CiV.WW, larga ? della colonna), pacco 18
-tappeto aggiornato: 607 immagini, 25 pacchi leggeri
+  nuova 36de7dbe58 da CiV.WW - 1600x1600, piu' vicina sul tappeto 82cad8bd41 a 3.1, esclusa piu' vicina a 5.4
+  nuova f66519c951 da CiV.WW - 1600x1600, piu' vicina sul tappeto 0615582dc0 a 2.8, esclusa piu' vicina a 5.1
+  36de7dbe58: misura M (CiV.WW, larga 0.49 della colonna), pacco 19
+  f66519c951: misura M (CiV.WW, larga 0.49 della colonna), pacco 20
+tappeto aggiornato: 609 immagini, 25 pacchi leggeri

@@ -3,7 +3,7 @@
 // w/h: misure della versione piu' grande; s: XS/S/M/L; p: codice pagina; u: percorso sul sito pubblicato; id: impronta (vedi strumenti/correzioni.json)
 window.TAPPETO_SITE = 'https://sites.google.com/view/ri-taglie';
 window.TAPPETO_PACKS = 25;
-window.TAPPETO_PACKNAMES = ["p00", "p01", "p02", "p03", "p04", "p05", "p06", "p07", "p08", "p09", "p10", "p11", "p12", "p13-6274ccab", "p14", "p15-b266457d", "p16-c54911be", "p17-382bdf81", "p18-6eaf63b6", "p19-1e5bfb71", "p20-31237b90", "p21-1f47b9ad", "p22-f4fe9899", "p23-a12bf4b5", "p24-7b73454b"];
+window.TAPPETO_PACKNAMES = ["p00", "p01", "p02", "p03", "p04", "p05", "p06", "p07", "p08", "p09", "p10", "p11", "p12", "p13-4441af9c", "p14", "p15-b266457d", "p16-c54911be", "p17-382bdf81", "p18-6eaf63b6", "p19-1e5bfb71", "p20-31237b90", "p21-b921e742", "p22-f4fe9899", "p23-a12bf4b5", "p24-7b73454b"];
 window.TAPPETO_PREVIEW = '';
 window.TAPPETO = [
 {"g":0,"o":0,"n":23015,"w":550,"h":1600,"s":"L","p":"LdPA2","q":"1b09TwEYArS_rNjyBxN-3bxD60NxI0WiV","u":"/medium/ldpa2","H":"h00a","ho":0,"hn":73128,"id":"1dd449fba1"},
@@ -352,9 +352,10 @@ window.TAPPETO = [
 {"g":13,"o":1022718,"n":64079,"w":1150,"h":1106,"s":"XS","p":"AdC.AM","q":"1LnGVftOorsOOiVC0iBlYV1bcfPm3U-2r","u":"/pubblicazioni/adc-am","id":"a30301fe87","ho":744858,"hn":169832,"H":"h13e-95266bc7"},
 {"g":13,"o":1086797,"n":25243,"w":270,"h":430,"s":"XS","p":"AsR.NEea","q":"1bnS-XLyPMn4x_DdrH2gPqWm6s0LcMyfM","u":"/pubblicazioni/asr-neea","id":"20ca5cf41f"},
 {"g":13,"o":1112040,"n":35097,"w":772,"h":1004,"s":"XS","p":"EAW","q":"1j3ovBugu_zbtnHUf4Bo5RMk2k1R7tz9d","u":"/small/eaw","id":"f36bda858a","ho":914690,"hn":73956,"H":"h13e-95266bc7"},
-{"g":13,"o":1147137,"n":38916,"w":1000,"h":1538,"s":"XS","p":"CiV.Brpdp","q":"1tJkBhcUZUWEqXtmgQ8lz2Joq6UEP8Yyq","u":"/pubblicazioni/civ-brpdp","id":"d937d85d54","ho":0,"hn":226611,"H":"h13f-13397893"},
+{"g":13,"o":1147137,"n":38916,"w":1000,"h":1538,"s":"XS","p":"CiV.Brpdp","q":"1tJkBhcUZUWEqXtmgQ8lz2Joq6UEP8Yyq","u":"/pubblicazioni/civ-brpdp","id":"d937d85d54","ho":0,"hn":226611,"H":"h13f-9ed50bcc"},
 {"g":13,"o":1186053,"n":28449,"w":481,"h":500,"s":"XS","p":"PPdR","q":"1neVztvX46TTd-dCye2-KVOtopDwWeLIc","u":"/medium/ppdr","id":"e3dec2ab59"},
-{"id":"bdb1292794","s":"M","p":"AsR.NEea","u":"/pubblicazioni/asr-neea","q":"","w":1024,"h":640,"g":13,"o":1214502,"n":65386,"ho":226611,"hn":260437,"H":"h13f-13397893"},
+{"id":"bdb1292794","s":"M","p":"AsR.NEea","u":"/pubblicazioni/asr-neea","q":"","w":1024,"h":640,"g":13,"o":1214502,"n":65386,"ho":226611,"hn":260437,"H":"h13f-9ed50bcc"},
+{"id":"9473e7198b","s":"M","p":"CiV.WW","u":"/pubblicazioni/civ-ww","q":"","w":1600,"h":1600,"g":13,"o":1279888,"n":64280,"ho":487048,"hn":405900,"H":"h13f-9ed50bcc"},
 {"g":14,"o":0,"n":84289,"w":1600,"h":1600,"s":"L","p":"LIdPA2","q":"1GTj6KmyquLVGQFCBTd70BUT1zedXtE_B","u":"/large/lidpa2","H":"h14a","ho":0,"hn":348383,"id":"0da647cf14"},
 {"g":14,"o":84289,"n":66244,"w":1600,"h":1130,"s":"L","p":"EB.L","q":"1t0PVHBgoP_ny9ft5ZEjnW-s2XJkqflp2","u":"/large/eb-l","H":"h14a","ho":348383,"hn":285819,"id":"6c21d9c7bc"},
 {"g":14,"o":150533,"n":62678,"w":1600,"h":1130,"s":"L","p":"LIdAS","q":"1geERvAffCAMJhbx4iofD9T8jxOswLKAg","u":"/medium/lidas","H":"h14a","ho":634202,"hn":210802,"id":"ae3dec30f2"},
@@ -546,6 +547,7 @@ window.TAPPETO = [
 {"g":21,"o":1007373,"n":32911,"w":373,"h":499,"s":"XS","p":"EAW","q":"1j3ovBugu_zbtnHUf4Bo5RMk2k1R7tz9d","u":"/small/eaw","id":"3a917a535f"},
 {"g":21,"o":1040284,"n":38129,"w":1192,"h":1500,"s":"XS","p":"CiV.Brpdp","q":"1tJkBhcUZUWEqXtmgQ8lz2Joq6UEP8Yyq","u":"/pubblicazioni/civ-brpdp","id":"39154248d1","ho":727165,"hn":146313,"H":"h21e-746b2303"},
 {"id":"b2e2e7cbbe","s":"XS","p":"AsR.AE","u":"/pubblicazioni/asr-ae","q":"","w":180,"h":273,"g":21,"o":1078413,"n":7988},
+{"id":"6fec3745d3","s":"M","p":"CiV.WW","u":"/pubblicazioni/civ-ww","q":"","w":1600,"h":1600,"g":21,"o":1086401,"n":64445,"ho":0,"hn":413305,"H":"h21f-7d00ba4f"},
 {"g":22,"o":0,"n":34855,"w":1600,"h":803,"s":"L","p":"PPdR","q":"1neVztvX46TTd-dCye2-KVOtopDwWeLIc","u":"/medium/ppdr","id":"977dc38626","ho":0,"hn":185410,"H":"h22a-b4e35ba1"},
 {"g":22,"o":34855,"n":41825,"w":1600,"h":753,"s":"L","p":"LTdP","q":"1mWP5Kz3yayA-Hko7CYSJtaTqIWGW9J3-","u":"/medium/ltdp","id":"4bc40588a9","ho":185410,"hn":149960,"H":"h22a-b4e35ba1"},
 {"g":22,"o":76680,"n":42752,"w":1600,"h":1163,"s":"L","p":"Pda.Iit-Tv","q":"1ykX8A9IyY9lHna991I6mLMfm8ZqwxZBl","u":"/small/pda-iit-tv","id":"62af1ac989","ho":335370,"hn":152629,"H":"h22a-b4e35ba1"},

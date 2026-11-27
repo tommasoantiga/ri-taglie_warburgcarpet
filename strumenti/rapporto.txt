@@ -1,10 +1,8 @@
-controllo del 2026-11-26 03:02 UTC
+controllo del 2026-11-27 03:04 UTC
 
 77 sottopagine nel menu
-immagini sul tappeto 609, riconosciute sul sito 609, nuove 2, tolte 0, cambiate di pagina 0, corrette a mano 0
+immagini sul tappeto 611, riconosciute sul sito 611, nuove 1, tolte 0, cambiate di pagina 0, corrette a mano 0
 pagine in elaborazione saltate: /small/cda, /small/tdlt, /medium/ldpa1, /medium/ldcdes
-  nuova 6fec3745d3 da CiV.WW - 1600x1600, piu' vicina sul tappeto 36de7dbe58 a 2.7, esclusa piu' vicina a 5.0
-  nuova 9473e7198b da CiV.WW - 1600x1600, piu' vicina sul tappeto f66519c951 a 2.4, esclusa piu' vicina a 6.0
-  6fec3745d3: misura M (CiV.WW, larga 0.49 della colonna), pacco 21
-  9473e7198b: misura M (CiV.WW, larga ? della colonna), pacco 13
-tappeto aggiornato: 611 immagini, 25 pacchi leggeri
+  nuova 4b73e1a30b da CiV.WW - 1600x1600, piu' vicina sul tappeto 6fec3745d3 a 4.8, esclusa piu' vicina a 8.1
+  4b73e1a30b: misura M (CiV.WW, larga 0.49 della colonna), pacco 14
+tappeto aggiornato: 612 immagini, 25 pacchi leggeri
